@@ -1,4 +1,20 @@
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 
-public class IdGeneratorMojo {
+
+/**
+ * 
+ * 
+ * @author Bjorn Ekryd
+ * @goal generate
+ */
+public class IdGeneratorMojo extends AbstractMojo {
+
+	@Override
+	public void execute() throws MojoExecutionException, MojoFailureException {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

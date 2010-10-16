@@ -60,14 +60,6 @@
   </dependencies>
   <build>
     <defaultGoal>install</defaultGoal>
-    <resources>
-      <resource>
-        <directory>src/main/bin</directory>
-      </resource>
-      <resource>
-        <directory>src/main/resources</directory>
-      </resource>
-    </resources>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -86,15 +78,6 @@
           <useProjectReferences>false</useProjectReferences>
           <downloadSources>true</downloadSources>
           <downloadJavadocs>true</downloadJavadocs>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <excludes>
-            <exclude>*.cmd</exclude>
-          </excludes>
         </configuration>
       </plugin>
       <plugin>
@@ -138,29 +121,6 @@
             <version>1.9</version>
           </dependency>
         </dependencies>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>2.4</version>
-        <executions>
-          <execution>
-            <id>copy-resources</id>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <phase>validate</phase>
-            <configuration>
-              <outputDirectory>${basedir}</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>src/main/bin</directory>
-                  <filtering>true</filtering>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -289,7 +249,7 @@
     <repository>
       <uniqueVersion>false</uniqueVersion>
       <id>googlecode</id>
-      <url>svn:https://sortpom.googlecode.com/svn/repo</url>
+      <url>svn:https://maven-idgenerator.googlecode.com/svn/repo</url>
     </repository>
   </distributionManagement>
 </project>
