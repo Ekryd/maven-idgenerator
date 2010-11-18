@@ -9,6 +9,12 @@ import java.util.List;
 import org.jdom.Element;
 import org.jdom.filter.Filter;
 
+/**
+ * Collects ids from existing elements
+ * 
+ * @author bjorn
+ * 
+ */
 public class AddIdOperation implements XmlParserOperation<Object> {
 	private final IdGenerator idGenerator;
 	private final Filter elementFilter = new ElementFilter();

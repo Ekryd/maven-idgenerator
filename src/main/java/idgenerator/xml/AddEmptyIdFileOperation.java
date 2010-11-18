@@ -10,6 +10,12 @@ import java.util.List;
 import org.jdom.Element;
 import org.jdom.filter.Filter;
 
+/**
+ * Returns all files that contains elements without ids
+ * 
+ * @author bjorn
+ * 
+ */
 public class AddEmptyIdFileOperation implements XmlParserOperation<List<File>> {
 	private final Filter elementFilter = new ElementFilter();
 	private final GeneratedElementFilter generatedElementFilter = new GeneratedElementFilter();

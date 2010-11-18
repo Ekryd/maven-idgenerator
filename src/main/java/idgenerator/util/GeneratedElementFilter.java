@@ -3,6 +3,12 @@ package idgenerator.util;
 import org.jdom.Element;
 import org.jdom.filter.Filter;
 
+/**
+ * Filters out components that should have ids
+ * 
+ * @author bjorn
+ * 
+ */
 public class GeneratedElementFilter implements Filter {
 	private static final long serialVersionUID = -8605449116029716276L;
 

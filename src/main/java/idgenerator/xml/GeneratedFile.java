@@ -16,11 +16,11 @@ import org.apache.maven.plugin.logging.Log;
  */
 public class GeneratedFile {
 
-	private final XmlValue document;
+	private final String document;
 
 	private final File fileName;
 
-	public GeneratedFile(File fileName, XmlValue document) {
+	public GeneratedFile(File fileName, String document) {
 		this.fileName = fileName;
 		this.document = document;
 	}
@@ -73,28 +73,25 @@ public class GeneratedFile {
 	}
 
 	public void saveFile(Log log) throws MojoFailureException {
-		if (document.isModifiedXml()) {
-			if (!fileName.canWrite()) {
-				log.warn(fileName + " is not writeable");
-			} else {
-				try {
-					fileName.delete();
-					fileName.createNewFile();
-					FileWriter fileOutputStream = new FileWriter(fileName);
-					BufferedWriter bufferedWriter = new BufferedWriter(fileOutputStream);
-					bufferedWriter.write(document.getString());
-					bufferedWriter.close();
-					fileOutputStream.close();
-				} catch (IOException e) {
-					throw new MojoFailureException("Cannot create file " + fileName, e);
-				}
+		if (!fileName.canWrite()) {
+			log.warn(fileName + " is not writeable");
+		} else {
+			try {
+				fileName.delete();
+				fileName.createNewFile();
+				FileWriter fileOutputStream = new FileWriter(fileName);
+				BufferedWriter bufferedWriter = new BufferedWriter(fileOutputStream);
+				bufferedWriter.write(document);
+				bufferedWriter.close();
+				fileOutputStream.close();
+			} catch (IOException e) {
+				throw new MojoFailureException("Cannot create file " + fileName, e);
 			}
 		}
-
 	}
 
 	@Override
 	public String toString() {
-		return fileName.toString() + "\n" + document.getString() + "\n";
+		return fileName.toString() + "\n" + document + "\n";
 	}
 }
