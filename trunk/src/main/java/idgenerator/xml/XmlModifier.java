@@ -18,6 +18,12 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
+/**
+ * Handles modifications of xml files when generating ids
+ * 
+ * @author bjorn
+ * 
+ */
 public class XmlModifier {
 
 	private final Filter elementFilter = new ElementFilter();
@@ -80,8 +86,7 @@ public class XmlModifier {
 			Document doc = saxBuilder.build(file);
 			List<Element> elements = getElements(doc);
 			modifyElements(file, elements);
-			XmlValue xmlValue = new XmlValue(getXmlString(doc));
-			return new GeneratedFile(file, xmlValue);
+			return new GeneratedFile(file, getXmlString(doc));
 		} catch (Exception e) {
 			System.err.println("XMLFel Fil: " + file + e.getMessage());
 			return null;

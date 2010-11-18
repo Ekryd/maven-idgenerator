@@ -5,8 +5,15 @@ import java.util.List;
 
 import org.jdom.Element;
 
+/**
+ * Defines an operation that can be performed when traversing an xml file
+ * 
+ * @author bjorn
+ * 
+ * @param <T>
+ */
 public interface XmlParserOperation<T> {
-	public T getInitialValue();
+	T getInitialValue();
 
-	public T perform(File file, List<Element> elements, T oldValue);
+	T perform(File file, List<Element> elements, T oldValue);
 }

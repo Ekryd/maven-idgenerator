@@ -3,7 +3,13 @@ package idgenerator.util;
 import org.jdom.Element;
 import org.jdom.filter.Filter;
 
-final public class ElementFilter implements Filter {
+/**
+ * Filters out Element objects
+ * 
+ * @author bjorn
+ * 
+ */
+public final class ElementFilter implements Filter {
 	private static final long serialVersionUID = 1L;
 
 	@Override

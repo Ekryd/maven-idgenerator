@@ -10,6 +10,12 @@ import org.apache.maven.plugin.logging.Log;
 import org.jdom.Element;
 import org.jdom.filter.Filter;
 
+/**
+ * Checks for elements that doesn't contain ids
+ * 
+ * @author bjorn
+ * 
+ */
 public class CheckEmptyIdOperation implements XmlParserOperation<Boolean> {
 	private final Filter elementFilter = new ElementFilter();
 	private final GeneratedElementFilter generatedElementFilter = new GeneratedElementFilter();

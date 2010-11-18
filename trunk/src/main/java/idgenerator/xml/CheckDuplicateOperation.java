@@ -9,6 +9,12 @@ import java.util.List;
 import org.jdom.Element;
 import org.jdom.filter.Filter;
 
+/**
+ * Checks for duplicate ids
+ * 
+ * @author bjorn
+ * 
+ */
 public class CheckDuplicateOperation implements XmlParserOperation<Boolean> {
 	private final IdGenerator idGenerator;
 	private final Filter elementFilter = new ElementFilter();

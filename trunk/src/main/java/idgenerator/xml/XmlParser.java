@@ -12,6 +12,12 @@ import org.jdom.Element;
 import org.jdom.filter.Filter;
 import org.jdom.input.SAXBuilder;
 
+/**
+ * Traverses xml files without modifying them
+ * 
+ * @author bjorn
+ * 
+ */
 public class XmlParser {
 
 	private final Filter elementFilter = new ElementFilter();
