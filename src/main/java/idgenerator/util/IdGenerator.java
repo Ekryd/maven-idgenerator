@@ -1,4 +1,4 @@
-package idgenerator;
+package idgenerator.util;
 
 import java.io.File;
 import java.util.HashMap;
@@ -16,6 +16,7 @@ public class IdGenerator {
 
 	private final Map<String, File> idSet = new HashMap<String, File>();
 	private final String idPrefix;
+
 	private final Log log;
 
 	public IdGenerator(Log log, String idPrefix) {
@@ -38,6 +39,13 @@ public class IdGenerator {
 		}
 		idSet.put(idPrefix + idNumber, file);
 		return idPrefix + idNumber;
+	}
+
+	/**
+	 * @return the idSet
+	 */
+	public Map<String, File> getIdSet() {
+		return new HashMap<String, File>(idSet);
 	}
 
 	public void outputDuplicateMessage(File file, String id) {

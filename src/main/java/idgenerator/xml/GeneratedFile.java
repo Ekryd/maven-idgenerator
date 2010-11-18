@@ -1,4 +1,4 @@
-package idgenerator;
+package idgenerator.xml;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -95,6 +95,6 @@ public class GeneratedFile {
 
 	@Override
 	public String toString() {
-		return fileName.toString() + "\n" + document.toString() + "\n";
+		return fileName.toString() + "\n" + document.getString() + "\n";
 	}
 }
