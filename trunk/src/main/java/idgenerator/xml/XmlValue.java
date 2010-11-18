@@ -1,4 +1,4 @@
-package idgenerator;
+package idgenerator.xml;
 
 /**
  * Contains either

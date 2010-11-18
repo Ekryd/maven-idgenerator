@@ -1,4 +1,4 @@
-package idgenerator;
+package idgenerator.file;
 
 import java.io.File;
 import java.io.FileFilter;
