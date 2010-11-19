@@ -10,6 +10,7 @@ import idgenerator.xml.XmlModifier;
 import idgenerator.xml.XmlParser;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.maven.plugin.AbstractMojo;
@@ -47,6 +48,34 @@ public class GenerateIdMojo extends AbstractMojo {
 	 */
 	private String fileSuffix;
 
+	/**
+	 * Encoding for the files.
+	 * 
+	 * @parameter expression="${sort.encoding}" default-value="UTF-8"
+	 */
+	private String encoding;
+
+	/**
+	 * Line separator for sorted pom. Can be either \n, \r or \r\n
+	 * 
+	 * @parameter expression="${sort.lineSeparator}"
+	 *            default-value="${line.separator}"
+	 */
+	private String lineSeparator;
+
+	/**
+	 * Number of space characters to use as indentation. A value of -1 indicates
+	 * that tab character should be used instead.
+	 * 
+	 * @parameter expression="${sort.nrOfIndentSpace}" default-value="2"
+	 */
+	private int nrOfIndentSpace;
+
+	private static final int MAX_INDENT_SPACES = 255;
+
+	/** Indicates that a tab character should be used instead of spaces. */
+	private static final int INDENT_TAB = -1;
+
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		outputInfo();
@@ -62,7 +91,7 @@ public class GenerateIdMojo extends AbstractMojo {
 		IdGenerator idGenerator = new IdGenerator(getLog(), idPrefix);
 		parser.parse(xhtmlBaseFiles, new AddIdOperation(idGenerator));
 
-		XmlModifier xmlModifier = new XmlModifier(idGenerator);
+		XmlModifier xmlModifier = new XmlModifier(idGenerator, encoding, getIndentCharacters(), lineSeparator);
 		List<GeneratedFile> files = xmlModifier.parseFiles(fileToGenerate);
 		for (GeneratedFile generatedFiles : files) {
 			System.out.println(generatedFiles);
@@ -80,6 +109,28 @@ public class GenerateIdMojo extends AbstractMojo {
 		FileList fileList = new FileList(baseDirectory);
 		fileList.findFiles(new XmlFileFilter(fileSuffix));
 		return fileList;
+	}
+
+	/**
+	 * Gets the indent characters from parameter.
+	 * 
+	 * @return the indent characters
+	 * @throws MojoFailureException
+	 *             the mojo failure exception
+	 */
+	private String getIndentCharacters() throws MojoFailureException {
+		if (nrOfIndentSpace == 0) {
+			return "";
+		}
+		if (nrOfIndentSpace == INDENT_TAB) {
+			return "\t";
+		}
+		if (nrOfIndentSpace < INDENT_TAB || nrOfIndentSpace > MAX_INDENT_SPACES) {
+			throw new MojoFailureException("nrOfIndentSpace cannot be below -1 or above 255: " + nrOfIndentSpace);
+		}
+		char[] chars = new char[nrOfIndentSpace];
+		Arrays.fill(chars, ' ');
+		return new String(chars);
 	}
 
 	private void outputInfo() {

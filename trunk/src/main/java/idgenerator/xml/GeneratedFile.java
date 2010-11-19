@@ -1,10 +1,9 @@
 package idgenerator.xml;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 
@@ -16,40 +15,14 @@ import org.apache.maven.plugin.logging.Log;
  */
 public class GeneratedFile {
 
-	private final String document;
-
 	private final File fileName;
+	private final String document;
+	private final String encoding;
 
-	public GeneratedFile(File fileName, String document) {
+	public GeneratedFile(File fileName, String document, String encoding) {
 		this.fileName = fileName;
 		this.document = document;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		GeneratedFile other = (GeneratedFile) obj;
-		if (fileName == null) {
-			if (other.fileName != null) {
-				return false;
-			}
-		} else if (!fileName.equals(other.fileName)) {
-			return false;
-		}
-		return true;
+		this.encoding = encoding;
 	}
 
 	/**
@@ -59,31 +32,13 @@ public class GeneratedFile {
 		return fileName;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((fileName == null) ? 0 : fileName.hashCode());
-		return result;
-	}
-
 	public void saveFile(Log log) throws MojoFailureException {
 		if (!fileName.canWrite()) {
 			log.warn(fileName + " is not writeable");
 		} else {
 			try {
-				fileName.delete();
-				fileName.createNewFile();
-				FileWriter fileOutputStream = new FileWriter(fileName);
-				BufferedWriter bufferedWriter = new BufferedWriter(fileOutputStream);
-				bufferedWriter.write(document);
-				bufferedWriter.close();
-				fileOutputStream.close();
+				FileUtils.forceDelete(fileName);
+				FileUtils.writeStringToFile(fileName, document, encoding);
 			} catch (IOException e) {
 				throw new MojoFailureException("Cannot create file " + fileName, e);
 			}

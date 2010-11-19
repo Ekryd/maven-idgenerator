@@ -13,6 +13,7 @@ import java.util.List;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.filter.Filter;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
@@ -30,11 +31,17 @@ public class XmlModifier {
 	private final GeneratedElementFilter generatedElementFilter = new GeneratedElementFilter();
 	private final SAXBuilder saxBuilder;
 	private final IdGenerator idGenerator;
+	private final String encoding;
+	private final String indent;
+	private final String lineSeparator;
 
-	public XmlModifier(IdGenerator idGenerator) {
+	public XmlModifier(IdGenerator idGenerator, String encoding, String indent, String lineSeparator) {
 		saxBuilder = new SAXBuilder(false);
 		saxBuilder.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
 		this.idGenerator = idGenerator;
+		this.encoding = encoding;
+		this.indent = indent;
+		this.lineSeparator = lineSeparator;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -56,9 +63,9 @@ public class XmlModifier {
 		XMLOutputter outputter = new XMLOutputter();
 		Format format = Format.getPrettyFormat();
 		format.setExpandEmptyElements(false);
-		format.setEncoding("UTF-8");
-		format.setLineSeparator("\n");
-		format.setIndent("  ");
+		format.setEncoding(encoding);
+		format.setLineSeparator(lineSeparator);
+		format.setIndent(indent);
 		format.setOmitDeclaration(true);
 		outputter.setFormat(format);
 		StringWriter stringWriter = new StringWriter();
@@ -86,8 +93,14 @@ public class XmlModifier {
 			Document doc = saxBuilder.build(file);
 			List<Element> elements = getElements(doc);
 			modifyElements(file, elements);
-			return new GeneratedFile(file, getXmlString(doc));
-		} catch (Exception e) {
+			return new GeneratedFile(file, getXmlString(doc), encoding);
+		} catch (RuntimeException e) {
+			System.err.println("XMLFel Fil: " + file + e.getMessage());
+			return null;
+		} catch (JDOMException e) {
+			System.err.println("XMLFel Fil: " + file + e.getMessage());
+			return null;
+		} catch (IOException e) {
 			System.err.println("XMLFel Fil: " + file + e.getMessage());
 			return null;
 		}
