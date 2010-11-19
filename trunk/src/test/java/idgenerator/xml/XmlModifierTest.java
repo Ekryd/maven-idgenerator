@@ -34,7 +34,7 @@ public class XmlModifierTest {
 						+ "\n"
 						+ "<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:ui=\"http://java.sun.com/jsf/facelets\" xmlns:h=\"http://java.sun.com/jsf/html\" xmlns:f=\"http://java.sun.com/jsf/core\" xmlns:a4j=\"http://richfaces.org/a4j\" xmlns:rich=\"http://richfaces.org/rich\" xmlns:c=\"http://java.sun.com/jstl/core\" xmlns:fn=\"http://java.sun.com/jsp/jstl/functions\" xml:lang=\"en\" lang=\"en\">\n"
 						+ "  <body>\n" + "    <ui:composition>\n"
-						+ "      <h:outputText id=\"test\" value=\"Out\" />\n"
+						+ "      <h:outputText id=\"test1\" value=\"Out\" />\n"
 						+ "      <h:outputText id=\"test2\" value=\"Out\" />\n"
 						+ "      <h:outputText id=\"gen1\" value=\"Out\" />\n" + "    </ui:composition>\n"
 						+ "  </body>\n" + "</html>\n\n\n", parseFiles.get(0).toString());
