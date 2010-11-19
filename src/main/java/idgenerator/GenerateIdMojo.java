@@ -21,45 +21,53 @@ import org.apache.maven.plugin.MojoFailureException;
  * Check xml files for duplicate element ids
  * 
  * @author Bjorn Ekryd
- * @goal check-generateid
- * @phase test
+ * @goal generateid
+ * @phase process-resources
+ * @description Generates ids for elements in xml-files
+ * @since 1.0.0
  */
 public class GenerateIdMojo extends AbstractMojo {
 
 	/**
 	 * @parameter expression="${idgen.baseDirectory}"
 	 *            default-value="${project.build.sourceDirectory}"
+	 * @description base directory for all xml-files
 	 */
 	private File baseDirectory;
 
 	/**
 	 * @parameter expression="${idgen.generateDirectory}"
 	 *            default-value="${project.build.sourceDirectory}"
+	 * @description base directory for xml-files that will get generated ids
 	 */
 	private File generateDirectory;
 
 	/**
-	 * @parameter expression="${idgen.idPrefix}" default-value="generated"
+	 * @parameter expression="${idgen.idPrefix}" default-value="gen"
+	 * @description prefix för generated idvalues.
 	 */
 	private String idPrefix;
 
 	/**
 	 * @parameter expression="${idgen.fileSuffix}" default-value=".xhtml";
+	 * @description file suffix för xml-files
 	 */
 	private String fileSuffix;
 
 	/**
 	 * Encoding for the files.
 	 * 
-	 * @parameter expression="${sort.encoding}" default-value="UTF-8"
+	 * @parameter expression="${idgen.encoding}" default-value="UTF-8"
+	 * @description encoding used when parsing xml and writing files
 	 */
 	private String encoding;
 
 	/**
-	 * Line separator for sorted pom. Can be either \n, \r or \r\n
+	 * Line separator for xml. Can be either \n, \r or \r\n
 	 * 
-	 * @parameter expression="${sort.lineSeparator}"
+	 * @parameter expression="${idgen.lineSeparator}"
 	 *            default-value="${line.separator}"
+	 * @description line separator used when writing xml-files
 	 */
 	private String lineSeparator;
 
@@ -67,7 +75,8 @@ public class GenerateIdMojo extends AbstractMojo {
 	 * Number of space characters to use as indentation. A value of -1 indicates
 	 * that tab character should be used instead.
 	 * 
-	 * @parameter expression="${sort.nrOfIndentSpace}" default-value="2"
+	 * @parameter expression="${idgen.nrOfIndentSpace}" default-value="2"
+	 * @description indentation used when writing xml-files
 	 */
 	private int nrOfIndentSpace;
 
@@ -85,6 +94,10 @@ public class GenerateIdMojo extends AbstractMojo {
 		if (fileToGenerate.isEmpty()) {
 			getLog().info("No files without ids");
 			return;
+		} else {
+			for (File file : fileToGenerate) {
+				getLog().info("Will generate ids for file: " + file);
+			}
 		}
 
 		FileList xhtmlBaseFiles = findBaseXHtmlFiles();
@@ -94,8 +107,7 @@ public class GenerateIdMojo extends AbstractMojo {
 		XmlModifier xmlModifier = new XmlModifier(idGenerator, encoding, getIndentCharacters(), lineSeparator);
 		List<GeneratedFile> files = xmlModifier.parseFiles(fileToGenerate);
 		for (GeneratedFile generatedFiles : files) {
-			System.out.println(generatedFiles);
-			// generatedFiles.saveFile(getLog());
+			generatedFiles.saveFile(getLog());
 		}
 	}
 
@@ -106,7 +118,7 @@ public class GenerateIdMojo extends AbstractMojo {
 	}
 
 	private FileList findGenerateXHtmlFiles() {
-		FileList fileList = new FileList(baseDirectory);
+		FileList fileList = new FileList(generateDirectory);
 		fileList.findFiles(new XmlFileFilter(fileSuffix));
 		return fileList;
 	}

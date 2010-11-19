@@ -17,17 +17,21 @@ import org.apache.maven.plugin.MojoFailureException;
  * @author Bjorn Ekryd
  * @goal check-emptyid
  * @phase test
+ * @description Checks if xml-files contains elements without ids
+ * @since 1.0.0
  */
 public class CheckEmptyIdMojo extends AbstractMojo {
 
 	/**
 	 * @parameter expression="${idgen.baseDirectory}"
 	 *            default-value="${project.build.sourceDirectory}"
+	 * @description base directory for all xml-files
 	 */
 	private File baseDirectory;
 
 	/**
 	 * @parameter expression="${idgen.fileSuffix}" default-value=".xhtml";
+	 * @description file suffix för xml-files
 	 */
 	private String fileSuffix;
 
