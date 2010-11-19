@@ -2,6 +2,7 @@ package idgenerator.file;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.util.Locale;
 
 /**
  * File filter to select files to process
@@ -20,7 +21,7 @@ public class XmlFileFilter implements FileFilter {
 		if (!pathname.isFile()) {
 			return false;
 		}
-		String filename = pathname.getName().toLowerCase();
+		String filename = pathname.getName().toLowerCase(Locale.getDefault());
 		return filename.endsWith(suffix);
 	}
 

@@ -34,7 +34,7 @@ public class AddIdOperation implements XmlParserOperation<Object> {
 	}
 
 	@Override
-	public Boolean perform(File file, List<Element> elements, Object dummy) {
+	public Object perform(File file, List<Element> elements, Object dummy) {
 		for (Element element : elements) {
 			String idValue = element.getAttributeValue("id");
 			if (idValue != null && !idValue.isEmpty()) {

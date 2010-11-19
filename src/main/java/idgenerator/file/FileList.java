@@ -1,6 +1,5 @@
 package idgenerator.file;
 
-
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ import java.util.List;
 public class FileList {
 
 	private final File directory;
-	private List<File> files;
+	private final List<File> files = new ArrayList<File>();
 	private FileFilter xHtmlFilter;
 	private final FileFilter dirFilter = new DirectoryFilter();
 
@@ -35,7 +34,7 @@ public class FileList {
 
 	public void findFiles(FileFilter xHtmlFilter) {
 		this.xHtmlFilter = xHtmlFilter;
-		files = new ArrayList<File>();
+		files.clear();
 		findFiles(directory);
 	}
 
