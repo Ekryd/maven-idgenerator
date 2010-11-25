@@ -1,19 +1,15 @@
 package idgenerator;
 
-import idgenerator.file.FileList;
-import idgenerator.file.XmlFileFilter;
-import idgenerator.xml.CheckEmptyIdOperation;
-import idgenerator.xml.XmlParser;
+import idgenerator.file.*;
+import idgenerator.xml.*;
 
 import java.io.File;
 
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.*;
 
 /**
  * Check xml files for element without ids
- * 
+ *
  * @author Bjorn Ekryd
  * @goal check-emptyid
  * @phase test
@@ -35,12 +31,18 @@ public class CheckEmptyIdMojo extends AbstractMojo {
 	 */
 	private String fileSuffix;
 
+	/**
+	 * @parameter expression="${idgen.elements}"
+	 * @description regular expression for all elements that should have ids
+	 */
+	private String elements;
+
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		outputInfo();
 		FileList xhtmlFiles = findXHtmlFiles();
 		XmlParser parser = new XmlParser();
-		boolean containsEmptyIds = parser.parse(xhtmlFiles, new CheckEmptyIdOperation(getLog()));
+		boolean containsEmptyIds = parser.parse(xhtmlFiles, new CheckEmptyIdOperation(getLog(), elements));
 		if (containsEmptyIds) {
 			throw new MojoFailureException("Contains missing ids");
 		}

@@ -1,7 +1,6 @@
 package idgenerator.xml;
 
-import idgenerator.file.FileList;
-import idgenerator.file.XmlFileFilter;
+import idgenerator.file.*;
 
 import java.io.File;
 import java.util.List;
@@ -17,7 +16,8 @@ public class AddEmptyIdFileOperationTest {
 		XmlParser xmlParser = new XmlParser();
 		FileList xhtmlFiles = new FileList(new File("src/test/resources/gen"));
 		xhtmlFiles.findFiles(new XmlFileFilter(".xhtml"));
-		List<File> files = xmlParser.parse(xhtmlFiles, new AddEmptyIdFileOperation());
+		List<File> files = xmlParser.parse(xhtmlFiles, new AddEmptyIdFileOperation(
+				"(a:elem)|(h:outputText)|(e:elem)|(xx:elem)"));
 		Assert.assertEquals(2, files.size());
 		Assert.assertEquals("out.xhtml", files.get(0).getName());
 		Assert.assertEquals("out4.xhtml", files.get(1).getName());

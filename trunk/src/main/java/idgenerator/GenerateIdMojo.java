@@ -1,25 +1,17 @@
 package idgenerator;
 
-import idgenerator.file.FileList;
-import idgenerator.file.XmlFileFilter;
+import idgenerator.file.*;
 import idgenerator.util.IdGenerator;
-import idgenerator.xml.AddEmptyIdFileOperation;
-import idgenerator.xml.AddIdOperation;
-import idgenerator.xml.GeneratedFile;
-import idgenerator.xml.XmlModifier;
-import idgenerator.xml.XmlParser;
+import idgenerator.xml.*;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.*;
 
 /**
  * Check xml files for duplicate element ids
- * 
+ *
  * @author Bjorn Ekryd
  * @goal generateid
  * @phase process-resources
@@ -56,7 +48,7 @@ public class GenerateIdMojo extends AbstractMojo {
 
 	/**
 	 * Encoding for the files.
-	 * 
+	 *
 	 * @parameter expression="${idgen.encoding}" default-value="UTF-8"
 	 * @description encoding used when parsing xml and writing files
 	 */
@@ -64,7 +56,7 @@ public class GenerateIdMojo extends AbstractMojo {
 
 	/**
 	 * Line separator for xml. Can be either \n, \r or \r\n
-	 * 
+	 *
 	 * @parameter expression="${idgen.lineSeparator}"
 	 *            default-value="${line.separator}"
 	 * @description line separator used when writing xml-files
@@ -74,11 +66,17 @@ public class GenerateIdMojo extends AbstractMojo {
 	/**
 	 * Number of space characters to use as indentation. A value of -1 indicates
 	 * that tab character should be used instead.
-	 * 
+	 *
 	 * @parameter expression="${idgen.nrOfIndentSpace}" default-value="2"
 	 * @description indentation used when writing xml-files
 	 */
 	private int nrOfIndentSpace;
+
+	/**
+	 * @parameter expression="${idgen.elements}"
+	 * @description regular expression for all elements that should have ids
+	 */
+	private String elements;
 
 	private static final int MAX_INDENT_SPACES = 255;
 
@@ -90,7 +88,7 @@ public class GenerateIdMojo extends AbstractMojo {
 		outputInfo();
 		FileList xhtmlGenFiles = findGenerateXHtmlFiles();
 		XmlParser parser = new XmlParser();
-		List<File> fileToGenerate = parser.parse(xhtmlGenFiles, new AddEmptyIdFileOperation());
+		List<File> fileToGenerate = parser.parse(xhtmlGenFiles, new AddEmptyIdFileOperation(elements));
 		if (fileToGenerate.isEmpty()) {
 			getLog().info("No files without ids");
 			return;
@@ -104,7 +102,7 @@ public class GenerateIdMojo extends AbstractMojo {
 		IdGenerator idGenerator = new IdGenerator(getLog(), idPrefix);
 		parser.parse(xhtmlBaseFiles, new AddIdOperation(idGenerator));
 
-		XmlModifier xmlModifier = new XmlModifier(idGenerator, encoding, getIndentCharacters(), lineSeparator);
+		XmlModifier xmlModifier = new XmlModifier(idGenerator, encoding, getIndentCharacters(), lineSeparator, elements);
 		List<GeneratedFile> files = xmlModifier.parseFiles(fileToGenerate);
 		for (GeneratedFile generatedFiles : files) {
 			generatedFiles.saveFile(getLog());
@@ -125,7 +123,7 @@ public class GenerateIdMojo extends AbstractMojo {
 
 	/**
 	 * Gets the indent characters from parameter.
-	 * 
+	 *
 	 * @return the indent characters
 	 * @throws MojoFailureException
 	 *             the mojo failure exception
@@ -146,10 +144,12 @@ public class GenerateIdMojo extends AbstractMojo {
 	}
 
 	private void outputInfo() {
-		getLog().info(
-				String.format(
-						"Generating ids for files ending with '%s' under the directory %s. Ids are scanned from directory %s",
-						fileSuffix, generateDirectory, baseDirectory));
+		getLog()
+				.info(
+						String
+								.format(
+										"Generating ids for files ending with '%s' under the directory %s. Ids are scanned from directory %s",
+										fileSuffix, generateDirectory, baseDirectory));
 
 	}
 }

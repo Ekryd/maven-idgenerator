@@ -1,65 +1,58 @@
 package idgenerator.xml;
 
-import idgenerator.util.ElementFilter;
-import idgenerator.util.GeneratedElementFilter;
-import idgenerator.util.IdGenerator;
+import idgenerator.util.*;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
-import org.jdom.Attribute;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
+import org.jdom.*;
 import org.jdom.filter.Filter;
 import org.jdom.input.SAXBuilder;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
+import org.jdom.output.*;
 
 /**
  * Handles modifications of xml files when generating ids
- * 
+ *
  * @author bjorn
- * 
+ *
  */
 public class XmlModifier {
 
 	private final Filter elementFilter = new ElementFilter();
-	private final GeneratedElementFilter generatedElementFilter = new GeneratedElementFilter();
+	private final GeneratedElementFilter generatedElementFilter;
 	private final SAXBuilder saxBuilder;
 	private final IdGenerator idGenerator;
 	private final String encoding;
 	private final String indent;
 	private final String lineSeparator;
 
-	public XmlModifier(IdGenerator idGenerator, String encoding, String indent, String lineSeparator) {
+	public XmlModifier(final IdGenerator idGenerator, final String encoding, final String indent,
+			final String lineSeparator, final String regExMatch) {
 		saxBuilder = new SAXBuilder(false);
 		saxBuilder.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
 		this.idGenerator = idGenerator;
 		this.encoding = encoding;
 		this.indent = indent;
 		this.lineSeparator = lineSeparator;
+		generatedElementFilter = new GeneratedElementFilter(regExMatch);
 	}
 
 	@SuppressWarnings("unchecked")
-	private void addAttribute(Element element, Attribute attribute) {
+	private void addAttribute(final Element element, final Attribute attribute) {
 		element.getAttributes().add(0, attribute);
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<Element> getElements(Document doc) {
+	private List<Element> getElements(final Document doc) {
 		return doc.getContent(elementFilter);
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<Element> getElements(Element element) {
+	private List<Element> getElements(final Element element) {
 		return element.getContent(elementFilter);
 	}
 
-	private String getXmlString(Document doc) throws IOException {
+	private String getXmlString(final Document doc) throws IOException {
 		XMLOutputter outputter = new XMLOutputter();
 		Format format = Format.getPrettyFormat();
 		format.setExpandEmptyElements(false);
@@ -75,7 +68,7 @@ public class XmlModifier {
 		return returnValue;
 	}
 
-	private void modifyElements(File file, List<Element> elements) {
+	private void modifyElements(final File file, final List<Element> elements) {
 		for (Element element : elements) {
 			if (generatedElementFilter.matches(element)) {
 				String idValue = element.getAttributeValue("id");
@@ -88,7 +81,7 @@ public class XmlModifier {
 		}
 	}
 
-	private GeneratedFile parseFile(File file) {
+	private GeneratedFile parseFile(final File file) {
 		try {
 			Document doc = saxBuilder.build(file);
 			List<Element> elements = getElements(doc);
@@ -106,7 +99,7 @@ public class XmlModifier {
 		}
 	}
 
-	public List<GeneratedFile> parseFiles(List<File> filesToModify) {
+	public List<GeneratedFile> parseFiles(final List<File> filesToModify) {
 		ArrayList<GeneratedFile> generatedFiles = new ArrayList<GeneratedFile>();
 		for (File file : filesToModify) {
 			generatedFiles.add(parseFile(file));

@@ -4,19 +4,18 @@ import idgenerator.file.FileList;
 import idgenerator.util.ElementFilter;
 
 import java.io.File;
-import java.util.List;
+import java.util.*;
 
 import org.apache.maven.plugin.MojoFailureException;
-import org.jdom.Document;
-import org.jdom.Element;
+import org.jdom.*;
 import org.jdom.filter.Filter;
 import org.jdom.input.SAXBuilder;
 
 /**
  * Traverses xml files without modifying them
- * 
+ *
  * @author bjorn
- * 
+ *
  */
 public class XmlParser {
 
@@ -29,11 +28,12 @@ public class XmlParser {
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<Element> getElements(Document doc) {
+	private List<Element> getElements(final Document doc) {
 		return doc.getContent(elementFilter);
 	}
 
-	private <T> T parse(File file, XmlParserOperation<T> operation, T oldValue) throws MojoFailureException {
+	private <T> T parse(final File file, final XmlParserOperation<T> operation, final T oldValue)
+			throws MojoFailureException {
 		try {
 			Document doc = saxBuilder.build(file);
 			List<Element> elements = getElements(doc);
@@ -44,9 +44,9 @@ public class XmlParser {
 
 	}
 
-	public <T> T parse(FileList fileList, XmlParserOperation<T> operation) throws MojoFailureException {
+	public <T> T parse(final FileList fileList, final XmlParserOperation<T> operation) throws MojoFailureException {
 		T returnValue = operation.getInitialValue();
-		List<File> files = fileList.getFiles();
+		Collection<File> files = fileList.getFiles();
 		for (File file : files) {
 			returnValue = parse(file, operation, returnValue);
 		}

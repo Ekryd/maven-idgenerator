@@ -10,10 +10,12 @@
       <plugin>
   <groupId>com.google.code.maven-idgenerator</groupId>
   <artifactId>maven-idgenerator-plugin</artifactId>
+  <version>1.1</version>
         <configuration>
           <baseDirectory>src/test/resources</baseDirectory>
           <generateDirectory>src/test/resources/ok</generateDirectory>
           <fileSuffix>.xhtml</fileSuffix>
+          <elements>(a:elem)|(h:outputText)|(e:elem)|(xx:elem)</elements>
         </configuration>
       </plugin>
     </plugins>

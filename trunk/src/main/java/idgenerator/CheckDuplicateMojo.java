@@ -1,20 +1,16 @@
 package idgenerator;
 
-import idgenerator.file.FileList;
-import idgenerator.file.XmlFileFilter;
+import idgenerator.file.*;
 import idgenerator.util.IdGenerator;
-import idgenerator.xml.CheckDuplicateOperation;
-import idgenerator.xml.XmlParser;
+import idgenerator.xml.*;
 
 import java.io.File;
 
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.*;
 
 /**
  * Check xml files for duplicate element ids
- * 
+ *
  * @author Bjorn Ekryd
  * @goal check-duplicate
  * @phase test
@@ -36,13 +32,19 @@ public class CheckDuplicateMojo extends AbstractMojo {
 	 */
 	private String fileSuffix;
 
+	/**
+	 * @parameter expression="${idgen.elements}"
+	 * @description regular expression for all elements that should have ids
+	 */
+	private String elements;
+
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		outputInfo();
 		FileList xhtmlFiles = findXHtmlFiles();
 		XmlParser parser = new XmlParser();
-		boolean containsDuplicates = parser.parse(xhtmlFiles,
-				new CheckDuplicateOperation(new IdGenerator(getLog(), "")));
+		boolean containsDuplicates = parser.parse(xhtmlFiles, new CheckDuplicateOperation(
+				new IdGenerator(getLog(), ""), elements));
 		if (containsDuplicates) {
 			throw new MojoFailureException("Contains duplicate ids");
 		}
