@@ -7,8 +7,7 @@ import junit.framework.Assert;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 
-import cheesymock.Cheesy;
-import cheesymock.Recorder;
+import cheesymock.*;
 
 public class CheckEmptyIdMojoTest extends AbstractMojoTestCase {
 	private Recorder recorder;
@@ -55,7 +54,7 @@ public class CheckEmptyIdMojoTest extends AbstractMojoTestCase {
 	}
 
 	/**
-	 * @throws Exception
+	 * (a:elem)|(h:outputText)|(e:elem)|(xx:elem)@throws Exception
 	 *             if any
 	 */
 	public void testOk() throws Exception {

@@ -1,30 +1,27 @@
 package idgenerator.file;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 /**
  * Finds all files of a certain sort under a directory. The files are filtered
  * to have the same ending
- * 
+ *
  * @author Björn Ekryd
- * 
+ *
  */
 public class FileList {
 
 	private final File directory;
-	private final List<File> files = new ArrayList<File>();
+	private final Collection<File> files = new TreeSet<File>();
 	private FileFilter xHtmlFilter;
 	private final FileFilter dirFilter = new DirectoryFilter();
 
-	public FileList(File directory) {
+	public FileList(final File directory) {
 		this.directory = directory;
 	}
 
-	private void findFiles(File dir) {
+	private void findFiles(final File dir) {
 		files.addAll(Arrays.asList(dir.listFiles(xHtmlFilter)));
 		File[] children = dir.listFiles(dirFilter);
 		for (File file : children) {
@@ -32,13 +29,13 @@ public class FileList {
 		}
 	}
 
-	public void findFiles(FileFilter xHtmlFilter) {
+	public void findFiles(final FileFilter xHtmlFilter) {
 		this.xHtmlFilter = xHtmlFilter;
 		files.clear();
 		findFiles(directory);
 	}
 
-	public List<File> getFiles() {
+	public Collection<File> getFiles() {
 		return files;
 	}
 

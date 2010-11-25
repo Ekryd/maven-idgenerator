@@ -1,15 +1,13 @@
 package idgenerator.xml;
 
-import idgenerator.file.FileList;
-import idgenerator.file.XmlFileFilter;
+import idgenerator.file.*;
 
 import java.io.File;
 
 import junit.framework.Assert;
 
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.plugin.logging.SystemStreamLog;
+import org.apache.maven.plugin.logging.*;
 import org.junit.Test;
 
 public class CheckEmptyIdOperationTest {
@@ -19,7 +17,8 @@ public class CheckEmptyIdOperationTest {
 		XmlParser xmlParser = new XmlParser();
 		FileList xhtmlFiles = new FileList(new File("src/test/resources/fail"));
 		xhtmlFiles.findFiles(new XmlFileFilter(".xhtml"));
-		boolean actual = xmlParser.parse(xhtmlFiles, new CheckEmptyIdOperation(log));
+		boolean actual = xmlParser.parse(xhtmlFiles, new CheckEmptyIdOperation(log,
+				"(a:elem)|(h:outputText)|(e:elem)|(xx:elem)"));
 		Assert.assertEquals(true, actual);
 	}
 
@@ -29,7 +28,8 @@ public class CheckEmptyIdOperationTest {
 		XmlParser xmlParser = new XmlParser();
 		FileList xhtmlFiles = new FileList(new File("src/test/resources/ok"));
 		xhtmlFiles.findFiles(new XmlFileFilter(".xhtml"));
-		boolean actual = xmlParser.parse(xhtmlFiles, new CheckEmptyIdOperation(log));
+		boolean actual = xmlParser.parse(xhtmlFiles, new CheckEmptyIdOperation(log,
+				"(a:elem)|(h:outputText)|(e:elem)|(xx:elem)"));
 		Assert.assertEquals(false, actual);
 	}
 

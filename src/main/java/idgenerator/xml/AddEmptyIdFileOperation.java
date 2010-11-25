@@ -1,29 +1,28 @@
 package idgenerator.xml;
 
-import idgenerator.util.ElementFilter;
-import idgenerator.util.GeneratedElementFilter;
+import idgenerator.util.*;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.jdom.Element;
 import org.jdom.filter.Filter;
 
 /**
  * Returns all files that contains elements without ids
- * 
+ *
  * @author bjorn
- * 
+ *
  */
 public class AddEmptyIdFileOperation implements XmlParserOperation<List<File>> {
 	private final Filter elementFilter = new ElementFilter();
-	private final GeneratedElementFilter generatedElementFilter = new GeneratedElementFilter();
+	private final GeneratedElementFilter generatedElementFilter;
 
-	public AddEmptyIdFileOperation() {
+	public AddEmptyIdFileOperation(final String regExMatch) {
+		generatedElementFilter = new GeneratedElementFilter(regExMatch);
 	}
 
-	private boolean containsEmptyIds(List<Element> elements) {
+	private boolean containsEmptyIds(final List<Element> elements) {
 		for (Element element : elements) {
 			if (generatedElementFilter.matches(element)) {
 				String idValue = element.getAttributeValue("id");
@@ -39,7 +38,7 @@ public class AddEmptyIdFileOperation implements XmlParserOperation<List<File>> {
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<Element> getElements(Element element) {
+	private List<Element> getElements(final Element element) {
 		return element.getContent(elementFilter);
 	}
 
@@ -49,7 +48,7 @@ public class AddEmptyIdFileOperation implements XmlParserOperation<List<File>> {
 	}
 
 	@Override
-	public List<File> perform(File file, List<Element> elements, List<File> fileList) {
+	public List<File> perform(final File file, final List<Element> elements, final List<File> fileList) {
 		boolean containsEmptyIds = containsEmptyIds(elements);
 		if (containsEmptyIds) {
 			fileList.add(file);
