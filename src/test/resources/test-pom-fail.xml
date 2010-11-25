@@ -8,9 +8,8 @@
     <defaultGoal>install</defaultGoal>
     <plugins>
       <plugin>
-  <groupId>com.google.code.maven-idgenerator</groupId>
+  <groupId>com.google.code.idgenerator</groupId>
   <artifactId>maven-idgenerator-plugin</artifactId>
-  <version>1.1</version>
         <configuration>
           <baseDirectory>src/test/resources/fail</baseDirectory>
           <fileSuffix>.xhtml</fileSuffix>
