@@ -1,6 +1,8 @@
 package idgenerator.xml;
 
-import idgenerator.util.*;
+import idgenerator.util.ElementFilter;
+import idgenerator.util.GeneratedElementFilter;
+import idgenerator.util.IdGenerator;
 
 import java.io.File;
 import java.util.List;
@@ -10,18 +12,23 @@ import org.jdom.filter.Filter;
 
 /**
  * Checks for duplicate ids
- *
+ * 
  * @author bjorn
- *
+ * 
  */
 public class CheckDuplicateOperation implements XmlParserOperation<Boolean> {
 	private final IdGenerator idGenerator;
 	private final Filter elementFilter = new ElementFilter();
 	private final GeneratedElementFilter generatedElementFilter;
+	private final boolean onlyDuplicateGeneratedIds;
+	private final String idPrefix;
 
-	public CheckDuplicateOperation(final IdGenerator idGenerator, final String regExMatch) {
+	public CheckDuplicateOperation(final IdGenerator idGenerator, final String regExMatch,
+			boolean onlyDuplicateGeneratedIds, String idPrefix) {
 		this.idGenerator = idGenerator;
 		generatedElementFilter = new GeneratedElementFilter(regExMatch);
+		this.onlyDuplicateGeneratedIds = onlyDuplicateGeneratedIds;
+		this.idPrefix = idPrefix;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -41,8 +48,10 @@ public class CheckDuplicateOperation implements XmlParserOperation<Boolean> {
 			String idValue = element.getAttributeValue("id");
 			if (idValue != null && !idValue.isEmpty()) {
 				if (idGenerator.contains(idValue) && generatedElementFilter.matches(element)) {
-					idGenerator.outputDuplicateMessage(file, idValue);
-					containsDuplicates = true;
+					if (!onlyDuplicateGeneratedIds || idValue.startsWith(idPrefix)) {
+						idGenerator.outputDuplicateMessage(file, idValue);
+						containsDuplicates = true;
+					}
 				}
 				idGenerator.addId(file, idValue);
 			}
