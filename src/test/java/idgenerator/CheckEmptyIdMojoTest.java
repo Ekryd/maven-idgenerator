@@ -1,67 +1,66 @@
 package idgenerator;
 
-import org.apache.maven.plugin.testing.AbstractMojoTestCase;
-import org.junit.Assert;
+import idgenerator.logger.MavenLogger;
+import org.apache.maven.plugin.MojoFailureException;
+import org.junit.After;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import refutils.ReflectionHelper;
 
 import java.io.File;
 
-public class CheckEmptyIdMojoTest extends AbstractMojoTestCase {
-//	private Recorder recorder;
-//
-//	/** {@inheritDoc} */
-//	@Override
-//	protected void setUp() throws Exception {
-//		// required
-//		super.setUp();
-//		recorder = new Recorder();
-//	}
-//
-//	/** {@inheritDoc} */
-//	@Override
-//	protected void tearDown() throws Exception {
-//		// required
-//		super.tearDown();
-//	}
-//
+import static org.mockito.Mockito.*;
 
-	public void testProjectWithFaultyXhtmlFilesShouldFail() throws Exception {
-		File pom = getTestFile("src/test/resources/test-pom-fail.xml");
-		assertNotNull(pom);
-		assertTrue(pom.exists());
 
-		CheckEmptyIdMojo myMojo = (CheckEmptyIdMojo) lookupMojo("check-emptyid", pom);
-//		Log log = Cheesy.mock(Log.class);
-//		recorder.expect(log)
-//				.info("Scanning all files ending with '.xhtml' under the directory src/test/resources/fail");
-//		recorder.expect(log).error(
-//				"The file src/test/resources/fail/out.xhtml contains an element h:outputText which doesn't have an id");
-//		myMojo.setLog(log);
-		assertNotNull(myMojo);
-		try {
-			myMojo.execute();
-			Assert.fail();
-		} catch (Exception e) {
-			Assert.assertEquals("Contains missing ids", e.getMessage());
-		}
-//		recorder.check();
-	}
+public class CheckEmptyIdMojoTest {
 
-//
-//	/**
-//	 * (a:elem)|(h:outputText)|(e:elem)|(xx:elem)@throws Exception
-//	 *             if any
-//	 */
-//	public void testOk() throws Exception {
-//		File pom = getTestFile("src/test/resources/test-pom-ok.xml");
-//		assertNotNull(pom);
-//		assertTrue(pom.exists());
-//
-//		CheckEmptyIdMojo myMojo = (CheckEmptyIdMojo) lookupMojo("check-emptyid", pom);
-//		Log log = Cheesy.mock(Log.class);
-//		recorder.expect(log).info("Scanning all files ending with '.xhtml' under the directory src/test/resources/ok");
-//		myMojo.setLog(log);
-//		assertNotNull(myMojo);
-//		myMojo.execute();
-//		recorder.check();
-//	}
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
+    private MavenLogger mavenLogger = mock(MavenLogger.class);
+
+    @After
+    public void tearDown() throws Exception {
+        verifyNoMoreInteractions(mavenLogger);
+    }
+
+    @Test
+    public void testProjectWithFaultyXhtmlFilesShouldFail() throws Exception {
+        CheckEmptyIdMojo myMojo = new CheckEmptyIdMojo();
+        ReflectionHelper mojoHelper = new ReflectionHelper(myMojo);
+        mojoHelper.setField("baseDirectory", new File("src/test/resources/fail"));
+        mojoHelper.setField("fileSuffix", ".xhtml");
+        mojoHelper.setField("elements", "(a:elem)|(h:outputText)|(e:elem)|(xx:elem)");
+
+        myMojo.setupEnvironment();
+
+        expectedException.expectMessage("Contains missing ids");
+        expectedException.expect(MojoFailureException.class);
+
+        mojoHelper.setField(mavenLogger);
+
+        try {
+            myMojo.runPlugin();
+        } finally {
+            verify(mavenLogger).error(
+                    "The file src/test/resources/fail/out.xhtml contains an element h:outputText which doesn't have an id");
+        }
+        
+    }
+
+    @Test
+	public void testProjectWithOkXhtmlFilesShouldBeSuccessful() throws Exception {
+        CheckEmptyIdMojo myMojo = new CheckEmptyIdMojo();
+        ReflectionHelper mojoHelper = new ReflectionHelper(myMojo);
+        mojoHelper.setField("baseDirectory", new File("src/test/resources/ok"));
+        mojoHelper.setField("fileSuffix", ".xhtml");
+        mojoHelper.setField("elements", "(a:elem)|(h:outputText)|(e:elem)|(xx:elem)");
+
+        myMojo.setupEnvironment();
+
+        mojoHelper.setField(mavenLogger);
+
+        myMojo.runPlugin();
+    }
 }

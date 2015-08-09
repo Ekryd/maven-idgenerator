@@ -12,44 +12,47 @@ import org.apache.maven.plugin.MojoFailureException;
 import java.io.File;
 
 /**
- * Check xml files for duplicate element ids
+ * Checks if xml-files contains elements with duplicate ids
  * 
  * @author Bjorn Ekryd
  * @goal check-duplicate
  * @phase test
- * @description Checks if xml-files contains elements with duplicate ids
- * @since 1.0.0
  */
 public class CheckDuplicateMojo extends AbstractMojo {
 
 	/**
+	 * Base directory for all xml-files
+	 * 
 	 * @parameter property="idgen.baseDirectory"
 	 *            default-value="${project.build.sourceDirectory}"
-	 * @description base directory for all xml-files
 	 */
 	private File baseDirectory;
 
 	/**
+	 * File suffix för xml-files
+	 * 
 	 * @parameter property="idgen.fileSuffix" default-value=".xhtml";
-	 * @description file suffix för xml-files
 	 */
 	private String fileSuffix;
 
 	/**
+	 * Regular expression for all elements that should have ids
+	 * 
 	 * @parameter property="idgen.elements"
-	 * @description regular expression for all elements that should have ids
 	 */
 	private String elements;
 
 	/**
+	 * If only generated ids should be checked for duplication
+	 * 
 	 * @parameter eproperty="idgen.idPrefix"default-value="false";
-	 * @description if only generated ids should be checked for duplication
 	 */
 	private boolean checkGeneratedIds;
 
 	/**
+	 * Prefix för generated idvalues.
+	 * 
 	 * @parameter property="idgen.idPrefix" default-value="gen"
-	 * @description prefix för generated idvalues.
 	 */
 	private String idPrefix;
 

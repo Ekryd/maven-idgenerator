@@ -2,6 +2,8 @@ package idgenerator;
 
 import idgenerator.file.FileList;
 import idgenerator.file.XmlFileFilter;
+import idgenerator.logger.MavenLogger;
+import idgenerator.logger.MavenLoggerImpl;
 import idgenerator.xml.CheckEmptyIdOperation;
 import idgenerator.xml.XmlParser;
 import org.apache.maven.plugin.AbstractMojo;
@@ -16,36 +18,50 @@ import java.io.File;
  * @author Bjorn Ekryd
  * @goal check-emptyid
  * @phase test
- * @description Checks if xml-files contains elements without ids
- * @since 1.0.0
  */
 public class CheckEmptyIdMojo extends AbstractMojo {
 
 	/**
+	 * Base directory for all xml-files
+	 * 
 	 * @parameter property="idgen.baseDirectory"
 	 *            default-value="${project.build.sourceDirectory}"
-	 * @description base directory for all xml-files
 	 */
 	private File baseDirectory;
 
 	/**
+	 * File suffix för xml-files
+	 * 
 	 * @parameter property="idgen.fileSuffix" default-value=".xhtml";
-	 * @description file suffix för xml-files
 	 */
 	private String fileSuffix;
 
 	/**
+	 * Regular expression for all elements that should have ids
+	 * 
 	 * @parameter property="idgen.elements"
-	 * @description regular expression for all elements that should have ids
 	 */
 	private String elements;
+	
+	private XmlParser parser;
+	private FileList xhtmlFiles;
+	private MavenLogger logger;
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		outputInfo();
-		FileList xhtmlFiles = findXHtmlFiles();
-		XmlParser parser = new XmlParser();
-		boolean containsEmptyIds = parser.parse(xhtmlFiles, new CheckEmptyIdOperation(getLog(), elements));
+		setupEnvironment();
+		runPlugin();
+	}
+
+	void setupEnvironment() {
+		logger = new MavenLoggerImpl(getLog());
+		xhtmlFiles = findXHtmlFiles();
+		parser = new XmlParser();
+	}
+
+	void runPlugin() throws MojoFailureException {
+		boolean containsEmptyIds = parser.parse(xhtmlFiles, new CheckEmptyIdOperation(logger, elements));
 		if (containsEmptyIds) {
 			throw new MojoFailureException("Contains missing ids");
 		}

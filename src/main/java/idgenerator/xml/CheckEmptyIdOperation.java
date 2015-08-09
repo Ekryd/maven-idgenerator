@@ -1,13 +1,13 @@
 package idgenerator.xml;
 
-import idgenerator.util.*;
+import idgenerator.logger.MavenLogger;
+import idgenerator.util.ElementFilter;
+import idgenerator.util.GeneratedElementFilter;
+import org.jdom.Element;
+import org.jdom.filter.Filter;
 
 import java.io.File;
 import java.util.List;
-
-import org.apache.maven.plugin.logging.Log;
-import org.jdom.Element;
-import org.jdom.filter.Filter;
 
 /**
  * Checks for elements that doesn't contain ids
@@ -18,9 +18,9 @@ import org.jdom.filter.Filter;
 public class CheckEmptyIdOperation implements XmlParserOperation<Boolean> {
 	private final Filter elementFilter = new ElementFilter();
 	private final GeneratedElementFilter generatedElementFilter;
-	private final Log log;
+	private final MavenLogger log;
 
-	public CheckEmptyIdOperation(final Log log, final String regExMatch) {
+	public CheckEmptyIdOperation(final MavenLogger log, final String regExMatch) {
 		this.log = log;
 		generatedElementFilter = new GeneratedElementFilter(regExMatch);
 	}
