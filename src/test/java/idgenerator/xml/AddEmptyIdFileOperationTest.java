@@ -1,14 +1,14 @@
 package idgenerator.xml;
 
-import idgenerator.file.*;
+import idgenerator.file.FileList;
+import idgenerator.file.XmlFileFilter;
+import org.apache.maven.plugin.MojoFailureException;
+import org.junit.Test;
 
 import java.io.File;
 import java.util.List;
 
-import junit.framework.Assert;
-
-import org.apache.maven.plugin.MojoFailureException;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public class AddEmptyIdFileOperationTest {
 	@Test
@@ -18,9 +18,9 @@ public class AddEmptyIdFileOperationTest {
 		xhtmlFiles.findFiles(new XmlFileFilter(".xhtml"));
 		List<File> files = xmlParser.parse(xhtmlFiles, new AddEmptyIdFileOperation(
 				"(a:elem)|(h:outputText)|(e:elem)|(xx:elem)"));
-		Assert.assertEquals(2, files.size());
-		Assert.assertEquals("out.xhtml", files.get(0).getName());
-		Assert.assertEquals("out4.xhtml", files.get(1).getName());
+		assertEquals(2, files.size());
+		assertEquals("out.xhtml", files.get(0).getName());
+		assertEquals("out4.xhtml", files.get(1).getName());
 	}
 
 }

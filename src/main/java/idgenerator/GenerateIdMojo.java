@@ -1,13 +1,16 @@
 package idgenerator;
 
-import idgenerator.file.*;
+import idgenerator.file.FileList;
+import idgenerator.file.XmlFileFilter;
 import idgenerator.util.IdGenerator;
 import idgenerator.xml.*;
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 
 import java.io.File;
-import java.util.*;
-
-import org.apache.maven.plugin.*;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Check xml files for duplicate element ids
@@ -21,27 +24,27 @@ import org.apache.maven.plugin.*;
 public class GenerateIdMojo extends AbstractMojo {
 
 	/**
-	 * @parameter expression="${idgen.baseDirectory}"
+	 * @parameter property="idgen.baseDirectory"
 	 *            default-value="${project.build.sourceDirectory}"
 	 * @description base directory for all xml-files
 	 */
 	private File baseDirectory;
 
 	/**
-	 * @parameter expression="${idgen.generateDirectory}"
+	 * @parameter property="idgen.generateDirectory"
 	 *            default-value="${project.build.sourceDirectory}"
 	 * @description base directory for xml-files that will get generated ids
 	 */
 	private File generateDirectory;
 
 	/**
-	 * @parameter expression="${idgen.idPrefix}" default-value="gen"
+	 * @parameter property="idgen.idPrefix" default-value="gen"
 	 * @description prefix för generated idvalues.
 	 */
 	private String idPrefix;
 
 	/**
-	 * @parameter expression="${idgen.fileSuffix}" default-value=".xhtml";
+	 * property="idgen.encoding"eSuffix" default-value=".xhtml";
 	 * @description file suffix för xml-files
 	 */
 	private String fileSuffix;
@@ -49,7 +52,7 @@ public class GenerateIdMojo extends AbstractMojo {
 	/**
 	 * Encoding for the files.
 	 *
-	 * @parameter expression="${idgen.encoding}" default-value="UTF-8"
+	 * @parameter property="idgen.encoding" default-value="UTF-8"
 	 * @description encoding used when parsing xml and writing files
 	 */
 	private String encoding;
@@ -57,7 +60,7 @@ public class GenerateIdMojo extends AbstractMojo {
 	/**
 	 * Line separator for xml. Can be either \n, \r or \r\n
 	 *
-	 * @parameter expression="${idgen.lineSeparator}"
+	 * @parameter property="idgen.lineSeparator"
 	 *            default-value="${line.separator}"
 	 * @description line separator used when writing xml-files
 	 */
@@ -67,13 +70,13 @@ public class GenerateIdMojo extends AbstractMojo {
 	 * Number of space characters to use as indentation. A value of -1 indicates
 	 * that tab character should be used instead.
 	 *
-	 * @parameter expression="${idgen.nrOfIndentSpace}" default-value="2"
+	 * @parameter property="idgen.nrOfIndentSpace" default-value="2"
 	 * @description indentation used when writing xml-files
 	 */
 	private int nrOfIndentSpace;
 
 	/**
-	 * @parameter expression="${idgen.elements}"
+	 * @parameter property="idgen.elements"
 	 * @description regular expression for all elements that should have ids
 	 */
 	private String elements;

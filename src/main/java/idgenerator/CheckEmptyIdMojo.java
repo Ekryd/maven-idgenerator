@@ -1,11 +1,14 @@
 package idgenerator;
 
-import idgenerator.file.*;
-import idgenerator.xml.*;
+import idgenerator.file.FileList;
+import idgenerator.file.XmlFileFilter;
+import idgenerator.xml.CheckEmptyIdOperation;
+import idgenerator.xml.XmlParser;
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 
 import java.io.File;
-
-import org.apache.maven.plugin.*;
 
 /**
  * Check xml files for element without ids
@@ -19,20 +22,20 @@ import org.apache.maven.plugin.*;
 public class CheckEmptyIdMojo extends AbstractMojo {
 
 	/**
-	 * @parameter expression="${idgen.baseDirectory}"
+	 * @parameter property="idgen.baseDirectory"
 	 *            default-value="${project.build.sourceDirectory}"
 	 * @description base directory for all xml-files
 	 */
 	private File baseDirectory;
 
 	/**
-	 * @parameter expression="${idgen.fileSuffix}" default-value=".xhtml";
+	 * @parameter property="idgen.fileSuffix" default-value=".xhtml";
 	 * @description file suffix för xml-files
 	 */
 	private String fileSuffix;
 
 	/**
-	 * @parameter expression="${idgen.elements}"
+	 * @parameter property="idgen.elements"
 	 * @description regular expression for all elements that should have ids
 	 */
 	private String elements;

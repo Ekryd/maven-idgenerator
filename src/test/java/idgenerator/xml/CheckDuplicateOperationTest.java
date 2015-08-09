@@ -3,15 +3,14 @@ package idgenerator.xml;
 import idgenerator.file.FileList;
 import idgenerator.file.XmlFileFilter;
 import idgenerator.util.IdGenerator;
-
-import java.io.File;
-
-import junit.framework.Assert;
-
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugin.logging.SystemStreamLog;
 import org.junit.Test;
+
+import java.io.File;
+
+import static org.junit.Assert.assertEquals;
 
 public class CheckDuplicateOperationTest {
 	@Test
@@ -22,7 +21,7 @@ public class CheckDuplicateOperationTest {
 		xhtmlFiles.findFiles(new XmlFileFilter(".xhtml"));
 		boolean actual = xmlParser.parse(xhtmlFiles, new CheckDuplicateOperation(new IdGenerator(log, "gen"),
 				"(a:elem)|(h:outputText)|(e:elem)|(xx:elem)", false, ""));
-		Assert.assertEquals(true, actual);
+		assertEquals(true, actual);
 	}
 
 	@Test
@@ -33,7 +32,7 @@ public class CheckDuplicateOperationTest {
 		xhtmlFiles.findFiles(new XmlFileFilter(".xhtml"));
 		boolean actual = xmlParser.parse(xhtmlFiles, new CheckDuplicateOperation(new IdGenerator(log, "gen"),
 				"(a:elem)|(h:outputText)|(e:elem)|(xx:elem)", false, ""));
-		Assert.assertEquals(false, actual);
+		assertEquals(false, actual);
 	}
 
 	@Test
@@ -44,7 +43,7 @@ public class CheckDuplicateOperationTest {
 		xhtmlFiles.findFiles(new XmlFileFilter(".xhtml"));
 		boolean actual = xmlParser.parse(xhtmlFiles, new CheckDuplicateOperation(new IdGenerator(log, "gen"),
 				"(a:elem)|(h:outputText)|(e:elem)|(xx:elem)", true, "test"));
-		Assert.assertEquals(true, actual);
+		assertEquals(true, actual);
 	}
 
 }

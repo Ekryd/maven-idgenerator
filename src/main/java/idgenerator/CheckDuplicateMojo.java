@@ -5,12 +5,11 @@ import idgenerator.file.XmlFileFilter;
 import idgenerator.util.IdGenerator;
 import idgenerator.xml.CheckDuplicateOperation;
 import idgenerator.xml.XmlParser;
-
-import java.io.File;
-
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+
+import java.io.File;
 
 /**
  * Check xml files for duplicate element ids
@@ -24,32 +23,32 @@ import org.apache.maven.plugin.MojoFailureException;
 public class CheckDuplicateMojo extends AbstractMojo {
 
 	/**
-	 * @parameter expression="${idgen.baseDirectory}"
+	 * @parameter property="idgen.baseDirectory"
 	 *            default-value="${project.build.sourceDirectory}"
 	 * @description base directory for all xml-files
 	 */
 	private File baseDirectory;
 
 	/**
-	 * @parameter expression="${idgen.fileSuffix}" default-value=".xhtml";
+	 * @parameter property="idgen.fileSuffix" default-value=".xhtml";
 	 * @description file suffix för xml-files
 	 */
 	private String fileSuffix;
 
 	/**
-	 * @parameter expression="${idgen.elements}"
+	 * @parameter property="idgen.elements"
 	 * @description regular expression for all elements that should have ids
 	 */
 	private String elements;
 
 	/**
-	 * @parameter expression="${idgen.checkGeneratedIds}" default-value="false";
+	 * @parameter eproperty="idgen.idPrefix"default-value="false";
 	 * @description if only generated ids should be checked for duplication
 	 */
 	private boolean checkGeneratedIds;
 
 	/**
-	 * @parameter expression="${idgen.idPrefix}" default-value="gen"
+	 * @parameter property="idgen.idPrefix" default-value="gen"
 	 * @description prefix för generated idvalues.
 	 */
 	private String idPrefix;

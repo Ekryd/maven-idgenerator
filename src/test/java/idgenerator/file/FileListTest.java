@@ -1,10 +1,11 @@
 package idgenerator.file;
 
+import org.junit.Test;
+
 import java.io.File;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
 
 public class FileListTest {
 
@@ -12,7 +13,7 @@ public class FileListTest {
 	public void testFindFiles() {
 		FileList xhtmlFiles = new FileList(new File("src/test/resources"));
 		xhtmlFiles.findFiles(new XmlFileFilter(".xhtml"));
-		Assert.assertEquals("src/test/resources/fail/out.xhtml\n" + "src/test/resources/fail/out2.xhtml\n"
+		assertEquals("src/test/resources/fail/out.xhtml\n" + "src/test/resources/fail/out2.xhtml\n"
 				+ "src/test/resources/gen/out.xhtml\n" + "src/test/resources/gen/out2.xhtml\n"
 				+ "src/test/resources/gen/out3.xhtml\n" + "src/test/resources/gen/out4.xhtml\n"
 				+ "src/test/resources/ok/out.xhtml\n", xhtmlFiles.toString());
