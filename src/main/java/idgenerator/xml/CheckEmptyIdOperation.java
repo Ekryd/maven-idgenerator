@@ -1,10 +1,9 @@
 package idgenerator.xml;
 
 import idgenerator.logger.MavenLogger;
-import idgenerator.util.ElementFilter;
+import idgenerator.util.ElementUtil;
 import idgenerator.util.GeneratedElementFilter;
 import org.jdom.Element;
-import org.jdom.filter.Filter;
 
 import java.io.File;
 import java.util.List;
@@ -15,18 +14,12 @@ import java.util.List;
  * @author bjorn
  */
 public class CheckEmptyIdOperation implements XmlParserOperation<Boolean> {
-    private final Filter elementFilter = new ElementFilter();
     private final GeneratedElementFilter generatedElementFilter;
     private final MavenLogger log;
 
     public CheckEmptyIdOperation(final MavenLogger log, final String regExMatch) {
         this.log = log;
         generatedElementFilter = new GeneratedElementFilter(regExMatch);
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<Element> getElements(final Element element) {
-        return element.getContent(elementFilter);
     }
 
     @Override
@@ -46,7 +39,7 @@ public class CheckEmptyIdOperation implements XmlParserOperation<Boolean> {
                     containsEmptyIds = true;
                 }
             }
-            containsEmptyIds = perform(file, getElements(element), containsEmptyIds) || containsEmptyIds;
+            containsEmptyIds = perform(file, ElementUtil.getElements(element), containsEmptyIds) || containsEmptyIds;
         }
         return containsEmptyIds;
     }

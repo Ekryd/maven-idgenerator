@@ -1,9 +1,8 @@
 package idgenerator.xml;
 
-import idgenerator.util.ElementFilter;
+import idgenerator.util.ElementUtil;
 import idgenerator.util.IdGenerator;
 import org.jdom.Element;
-import org.jdom.filter.Filter;
 
 import java.io.File;
 import java.util.List;
@@ -15,15 +14,9 @@ import java.util.List;
  */
 public class AddIdOperation implements XmlParserOperation<Object> {
     private final IdGenerator idGenerator;
-    private final Filter elementFilter = new ElementFilter();
 
     public AddIdOperation(IdGenerator idGenerator) {
         this.idGenerator = idGenerator;
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<Element> getElements(Element element) {
-        return element.getContent(elementFilter);
     }
 
     @Override
@@ -38,7 +31,7 @@ public class AddIdOperation implements XmlParserOperation<Object> {
             if (idValue != null && !idValue.isEmpty()) {
                 idGenerator.addId(file, idValue);
             }
-            perform(file, getElements(element), dummy);
+            perform(file, ElementUtil.getElements(element), dummy);
         }
         return null;
     }

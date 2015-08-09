@@ -1,11 +1,10 @@
 package idgenerator.xml;
 
 import idgenerator.file.FileList;
-import idgenerator.util.ElementFilter;
+import idgenerator.util.ElementUtil;
 import org.apache.maven.plugin.MojoFailureException;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.filter.Filter;
 import org.jdom.input.SAXBuilder;
 
 import java.io.File;
@@ -19,24 +18,18 @@ import java.util.List;
  */
 public class XmlParser {
 
-    private final Filter elementFilter = new ElementFilter();
     private final SAXBuilder saxBuilder;
 
     public XmlParser() {
-        saxBuilder = new SAXBuilder(false);
-        saxBuilder.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+        this.saxBuilder = new SAXBuilder(false);
+        this.saxBuilder.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
     }
-
-    @SuppressWarnings("unchecked")
-    private List<Element> getElements(final Document doc) {
-        return doc.getContent(elementFilter);
-    }
-
+    
     private <T> T parse(final File file, final XmlParserOperation<T> operation, final T oldValue)
             throws MojoFailureException {
         try {
             Document doc = saxBuilder.build(file);
-            List<Element> elements = getElements(doc);
+            List<Element> elements = ElementUtil.getElements(doc);
             return operation.perform(file, elements, oldValue);
         } catch (Exception e) {
             throw new MojoFailureException("Cannot parse file " + file, e);

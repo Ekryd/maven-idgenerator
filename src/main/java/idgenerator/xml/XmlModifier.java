@@ -1,13 +1,12 @@
 package idgenerator.xml;
 
-import idgenerator.util.ElementFilter;
+import idgenerator.util.ElementUtil;
 import idgenerator.util.GeneratedElementFilter;
 import idgenerator.util.IdGenerator;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jdom.filter.Filter;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
@@ -25,7 +24,6 @@ import java.util.List;
  */
 public class XmlModifier {
 
-    private final Filter elementFilter = new ElementFilter();
     private final GeneratedElementFilter generatedElementFilter;
     private final SAXBuilder saxBuilder;
     private final IdGenerator idGenerator;
@@ -35,28 +33,13 @@ public class XmlModifier {
 
     public XmlModifier(final IdGenerator idGenerator, final String encoding, final String indent,
                        final String lineSeparator, final String regExMatch) {
-        saxBuilder = new SAXBuilder(false);
-        saxBuilder.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+        this.saxBuilder = new SAXBuilder(false);
+        this.saxBuilder.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
         this.idGenerator = idGenerator;
         this.encoding = encoding;
         this.indent = indent;
         this.lineSeparator = lineSeparator;
-        generatedElementFilter = new GeneratedElementFilter(regExMatch);
-    }
-
-    @SuppressWarnings("unchecked")
-    private void addAttribute(final Element element, final Attribute attribute) {
-        element.getAttributes().add(0, attribute);
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<Element> getElements(final Document doc) {
-        return doc.getContent(elementFilter);
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<Element> getElements(final Element element) {
-        return element.getContent(elementFilter);
+        this.generatedElementFilter = new GeneratedElementFilter(regExMatch);
     }
 
     private String getXmlString(final Document doc) throws IOException {
@@ -81,17 +64,17 @@ public class XmlModifier {
                 String idValue = element.getAttributeValue("id");
                 if (idValue == null || idValue.isEmpty()) {
                     Attribute attribute = new Attribute("id", idGenerator.generateId(file));
-                    addAttribute(element, attribute);
+                    ElementUtil.addAttribute(element, attribute);
                 }
             }
-            modifyElements(file, getElements(element));
+            modifyElements(file, ElementUtil.getElements(element));
         }
     }
 
     private GeneratedFile parseFile(final File file) {
         try {
             Document doc = saxBuilder.build(file);
-            List<Element> elements = getElements(doc);
+            List<Element> elements = ElementUtil.getElements(doc);
             modifyElements(file, elements);
             return new GeneratedFile(file, getXmlString(doc), encoding);
         } catch (RuntimeException e) {

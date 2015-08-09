@@ -35,8 +35,9 @@ public class IdGenerator {
         while (idSet.containsKey(idPrefix + idNumber)) {
             idNumber++;
         }
-        idSet.put(idPrefix + idNumber, file);
-        return idPrefix + idNumber;
+        String newId = idPrefix + idNumber;
+        idSet.put(newId, file);
+        return newId;
     }
 
     /**

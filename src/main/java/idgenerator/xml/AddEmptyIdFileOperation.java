@@ -1,9 +1,8 @@
 package idgenerator.xml;
 
-import idgenerator.util.ElementFilter;
+import idgenerator.util.ElementUtil;
 import idgenerator.util.GeneratedElementFilter;
 import org.jdom.Element;
-import org.jdom.filter.Filter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ import java.util.List;
  * @author bjorn
  */
 public class AddEmptyIdFileOperation implements XmlParserOperation<List<File>> {
-    private final Filter elementFilter = new ElementFilter();
     private final GeneratedElementFilter generatedElementFilter;
 
     public AddEmptyIdFileOperation(final String regExMatch) {
@@ -30,16 +28,11 @@ public class AddEmptyIdFileOperation implements XmlParserOperation<List<File>> {
                     return true;
                 }
             }
-            if (containsEmptyIds(getElements(element))) {
+            if (containsEmptyIds(ElementUtil.getElements(element))) {
                 return true;
             }
         }
         return false;
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<Element> getElements(final Element element) {
-        return element.getContent(elementFilter);
     }
 
     @Override

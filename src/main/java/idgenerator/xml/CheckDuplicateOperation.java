@@ -1,10 +1,9 @@
 package idgenerator.xml;
 
-import idgenerator.util.ElementFilter;
+import idgenerator.util.ElementUtil;
 import idgenerator.util.GeneratedElementFilter;
 import idgenerator.util.IdGenerator;
 import org.jdom.Element;
-import org.jdom.filter.Filter;
 
 import java.io.File;
 import java.util.List;
@@ -16,7 +15,6 @@ import java.util.List;
  */
 public class CheckDuplicateOperation implements XmlParserOperation<Boolean> {
     private final IdGenerator idGenerator;
-    private final Filter elementFilter = new ElementFilter();
     private final GeneratedElementFilter generatedElementFilter;
     private final boolean onlyDuplicateGeneratedIds;
     private final String idPrefix;
@@ -28,12 +26,7 @@ public class CheckDuplicateOperation implements XmlParserOperation<Boolean> {
         this.onlyDuplicateGeneratedIds = onlyDuplicateGeneratedIds;
         this.idPrefix = idPrefix;
     }
-
-    @SuppressWarnings("unchecked")
-    private List<Element> getElements(final Element element) {
-        return element.getContent(elementFilter);
-    }
-
+    
     @Override
     public Boolean getInitialValue() {
         return false;
@@ -53,7 +46,7 @@ public class CheckDuplicateOperation implements XmlParserOperation<Boolean> {
                 }
                 idGenerator.addId(file, idValue);
             }
-            containsDuplicates = perform(file, getElements(element), containsDuplicates) || containsDuplicates;
+            containsDuplicates = perform(file, ElementUtil.getElements(element), containsDuplicates) || containsDuplicates;
         }
         return containsDuplicates;
     }
