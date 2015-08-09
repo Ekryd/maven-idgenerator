@@ -42,6 +42,32 @@ public class XmlModifier {
         this.generatedElementFilter = new GeneratedElementFilter(regExMatch);
     }
 
+    public List<GeneratedFile> parseFiles(final List<File> filesToModify) {
+        ArrayList<GeneratedFile> generatedFiles = new ArrayList<>();
+        for (File file : filesToModify) {
+            generatedFiles.add(parseFile(file));
+        }
+        return generatedFiles;
+    }
+
+    private GeneratedFile parseFile(final File file) {
+        try {
+            Document doc = saxBuilder.build(file);
+            List<Element> elements = ElementUtil.getElements(doc);
+            modifyElements(file, elements);
+            return new GeneratedFile(file, getXmlString(doc), encoding);
+        } catch (RuntimeException e) {
+            System.err.println("XMLFel Fil: " + file + e.getMessage());
+            return null;
+        } catch (JDOMException e) {
+            System.err.println("XMLFel Fil: " + file + e.getMessage());
+            return null;
+        } catch (IOException e) {
+            System.err.println("XMLFel Fil: " + file + e.getMessage());
+            return null;
+        }
+    }
+
     private String getXmlString(final Document doc) throws IOException {
         XMLOutputter outputter = new XMLOutputter();
         Format format = Format.getPrettyFormat();
@@ -71,29 +97,4 @@ public class XmlModifier {
         }
     }
 
-    private GeneratedFile parseFile(final File file) {
-        try {
-            Document doc = saxBuilder.build(file);
-            List<Element> elements = ElementUtil.getElements(doc);
-            modifyElements(file, elements);
-            return new GeneratedFile(file, getXmlString(doc), encoding);
-        } catch (RuntimeException e) {
-            System.err.println("XMLFel Fil: " + file + e.getMessage());
-            return null;
-        } catch (JDOMException e) {
-            System.err.println("XMLFel Fil: " + file + e.getMessage());
-            return null;
-        } catch (IOException e) {
-            System.err.println("XMLFel Fil: " + file + e.getMessage());
-            return null;
-        }
-    }
-
-    public List<GeneratedFile> parseFiles(final List<File> filesToModify) {
-        ArrayList<GeneratedFile> generatedFiles = new ArrayList<>();
-        for (File file : filesToModify) {
-            generatedFiles.add(parseFile(file));
-        }
-        return generatedFiles;
-    }
 }

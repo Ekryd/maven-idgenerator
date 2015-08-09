@@ -25,6 +25,15 @@ public class XmlParser {
         this.saxBuilder.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
     }
     
+    public <T> T parse(final FileList fileList, final XmlParserOperation<T> operation) throws MojoFailureException {
+        T returnValue = operation.getInitialValue();
+        Collection<File> files = fileList.getFiles();
+        for (File file : files) {
+            returnValue = parse(file, operation, returnValue);
+        }
+        return returnValue;
+    }
+
     private <T> T parse(final File file, final XmlParserOperation<T> operation, final T oldValue)
             throws MojoFailureException {
         try {
@@ -36,14 +45,4 @@ public class XmlParser {
         }
 
     }
-
-    public <T> T parse(final FileList fileList, final XmlParserOperation<T> operation) throws MojoFailureException {
-        T returnValue = operation.getInitialValue();
-        Collection<File> files = fileList.getFiles();
-        for (File file : files) {
-            returnValue = parse(file, operation, returnValue);
-        }
-        return returnValue;
-    }
-
 }

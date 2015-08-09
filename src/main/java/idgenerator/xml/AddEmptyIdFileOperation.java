@@ -20,6 +20,20 @@ public class AddEmptyIdFileOperation implements XmlParserOperation<List<File>> {
         generatedElementFilter = new GeneratedElementFilter(regExMatch);
     }
 
+    @Override
+    public List<File> getInitialValue() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<File> perform(final File file, final List<Element> elements, final List<File> fileList) {
+        boolean containsEmptyIds = containsEmptyIds(elements);
+        if (containsEmptyIds) {
+            fileList.add(file);
+        }
+        return fileList;
+    }
+
     private boolean containsEmptyIds(final List<Element> elements) {
         for (Element element : elements) {
             if (generatedElementFilter.matches(element)) {
@@ -35,17 +49,4 @@ public class AddEmptyIdFileOperation implements XmlParserOperation<List<File>> {
         return false;
     }
 
-    @Override
-    public List<File> getInitialValue() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<File> perform(final File file, final List<Element> elements, final List<File> fileList) {
-        boolean containsEmptyIds = containsEmptyIds(elements);
-        if (containsEmptyIds) {
-            fileList.add(file);
-        }
-        return fileList;
-    }
 }
