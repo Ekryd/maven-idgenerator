@@ -22,55 +22,55 @@ import java.io.File;
 @SuppressWarnings({"UnusedDeclaration", "JavaDoc"})
 public class CheckEmptyIdMojo extends AbstractMojo {
 
-	/**
-	 * Base directory for all xml-files
-	 * 
-	 * @parameter property="idgen.baseDirectory"
-	 *            default-value="${project.build.sourceDirectory}"
-	 */
-	private File baseDirectory;
+    /**
+     * Base directory for all xml-files
+     *
+     * @parameter property="idgen.baseDirectory"
+     * default-value="${project.build.sourceDirectory}"
+     */
+    private File baseDirectory;
 
-	/**
-	 * File suffix för xml-files
-	 * 
-	 * @parameter property="idgen.fileSuffix" default-value=".xhtml";
-	 */
-	private String fileSuffix;
+    /**
+     * File suffix för xml-files
+     *
+     * @parameter property="idgen.fileSuffix" default-value=".xhtml";
+     */
+    private String fileSuffix;
 
-	/**
-	 * Regular expression for all elements that should have ids
-	 * 
-	 * @parameter property="idgen.elements"
-	 */
-	private String elements;
-	
-	private XmlParser parser;
-	private FileList xhtmlFiles;
-	private MavenLogger logger;
+    /**
+     * Regular expression for all elements that should have ids
+     *
+     * @parameter property="idgen.elements"
+     */
+    private String elements;
 
-	@Override
-	public void execute() throws MojoExecutionException, MojoFailureException {
-		outputInfo();
-		setupEnvironment();
-		runPlugin();
-	}
+    private XmlParser parser;
+    private FileList xhtmlFiles;
+    private MavenLogger logger;
 
-	void setupEnvironment() {
-		logger = new MavenLoggerImpl(getLog());
-		xhtmlFiles = FileUtil.findFiles(baseDirectory, fileSuffix);
-		parser = new XmlParser();
-	}
+    @Override
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        outputInfo();
+        setupEnvironment();
+        runPlugin();
+    }
 
-	void runPlugin() throws MojoFailureException {
-		boolean containsEmptyIds = parser.parse(xhtmlFiles, new CheckEmptyIdOperation(logger, elements));
-		if (containsEmptyIds) {
-			throw new MojoFailureException("Contains missing ids");
-		}
-	}
+    void setupEnvironment() {
+        logger = new MavenLoggerImpl(getLog());
+        xhtmlFiles = FileUtil.findFiles(baseDirectory, fileSuffix);
+        parser = new XmlParser();
+    }
 
-	private void outputInfo() {
-		getLog().info(String.format("Scanning all files ending with '%s' under the directory %s", 
-				fileSuffix, baseDirectory));
+    void runPlugin() throws MojoFailureException {
+        boolean containsEmptyIds = parser.parse(xhtmlFiles, new CheckEmptyIdOperation(logger, elements));
+        if (containsEmptyIds) {
+            throw new MojoFailureException("Contains missing ids");
+        }
+    }
 
-	}
+    private void outputInfo() {
+        getLog().info(String.format("Scanning all files ending with '%s' under the directory %s",
+                fileSuffix, baseDirectory));
+
+    }
 }

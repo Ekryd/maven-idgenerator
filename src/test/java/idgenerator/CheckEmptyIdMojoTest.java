@@ -46,11 +46,11 @@ public class CheckEmptyIdMojoTest {
             verify(mavenLogger).error(
                     "The file src/test/resources/fail/out.xhtml contains an element h:outputText which doesn't have an id");
         }
-        
+
     }
 
     @Test
-	public void testProjectWithOkXhtmlFilesShouldBeSuccessful() throws Exception {
+    public void testProjectWithOkXhtmlFilesShouldBeSuccessful() throws Exception {
         CheckEmptyIdMojo myMojo = new CheckEmptyIdMojo();
         ReflectionHelper mojoHelper = new ReflectionHelper(myMojo);
         mojoHelper.setField("baseDirectory", new File("src/test/resources/ok"));

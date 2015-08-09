@@ -1,7 +1,8 @@
 package idgenerator;
 
 import idgenerator.file.FileList;
-import idgenerator.file.XmlFileFilter;
+import idgenerator.file.FileUtil;
+import idgenerator.logger.MavenLogger;
 import idgenerator.logger.MavenLoggerImpl;
 import idgenerator.util.IdGenerator;
 import idgenerator.xml.*;
@@ -24,7 +25,7 @@ import java.util.List;
 public class GenerateIdMojo extends AbstractMojo {
 
     /**
-     * Base directory for all xml-files
+     * Base directory for all xml-files. This is needed to generate non-duplicated ids.
      *
      * @parameter property="idgen.baseDirectory"
      * default-value="${project.build.sourceDirectory}"
@@ -88,44 +89,46 @@ public class GenerateIdMojo extends AbstractMojo {
     /** Indicates that a tab character should be used instead of spaces. */
     private static final int INDENT_TAB = -1;
 
+    private XmlParser parser;
+    private FileList xhtmlBaseFiles;
+    private MavenLogger logger;
+    private FileList xhtmlGenFiles;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         outputInfo();
-        FileList xhtmlGenFiles = findGenerateXHtmlFiles();
-        XmlParser parser = new XmlParser();
+        setupEnvironment();
+        runPlugin();
+    }
+
+    void setupEnvironment() {
+        logger = new MavenLoggerImpl(getLog());
+        xhtmlBaseFiles = FileUtil.findFiles(baseDirectory, fileSuffix);
+        parser = new XmlParser();
+        xhtmlGenFiles = FileUtil.findFiles(generateDirectory, fileSuffix);
+    }
+
+    void runPlugin() throws MojoFailureException {
         List<File> fileToGenerate = parser.parse(xhtmlGenFiles, new AddEmptyIdFileOperation(elements));
         if (fileToGenerate.isEmpty()) {
-            getLog().info("No files without ids");
+            logger.info("No files without ids");
             return;
         } else {
             for (File file : fileToGenerate) {
-                getLog().info("Will generate ids for file: " + file);
+                logger.info("Will generate ids for file: " + file);
             }
         }
 
-        FileList xhtmlBaseFiles = findBaseXHtmlFiles();
-        MavenLoggerImpl logger = new MavenLoggerImpl(getLog());
         IdGenerator idGenerator = new IdGenerator(logger, idPrefix);
         parser.parse(xhtmlBaseFiles, new AddIdOperation(idGenerator));
 
         XmlModifier xmlModifier = new XmlModifier(idGenerator, encoding, getIndentCharacters(), lineSeparator, elements);
         List<GeneratedFile> files = xmlModifier.parseFiles(fileToGenerate);
         for (GeneratedFile generatedFiles : files) {
-            generatedFiles.saveFile(getLog());
+            generatedFiles.saveFile(logger);
         }
     }
 
-    private FileList findBaseXHtmlFiles() {
-        FileList fileList = new FileList(baseDirectory);
-        fileList.findFiles(new XmlFileFilter(fileSuffix));
-        return fileList;
-    }
-
-    private FileList findGenerateXHtmlFiles() {
-        FileList fileList = new FileList(generateDirectory);
-        fileList.findFiles(new XmlFileFilter(fileSuffix));
-        return fileList;
-    }
 
     /**
      * Gets the indent characters from parameter.

@@ -10,11 +10,9 @@ import refutils.ReflectionHelper;
 
 import java.io.File;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.*;
 
-public class CheckDuplicateMojoTest  {
+public class CheckDuplicateMojoTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -26,9 +24,9 @@ public class CheckDuplicateMojoTest  {
         verifyNoMoreInteractions(mavenLogger);
     }
 
-    
+
     @Test
-	public void duplicateIdsShouldGenerateException() throws Exception {
+    public void duplicateIdsShouldGenerateException() throws Exception {
         CheckDuplicateMojo myMojo = new CheckDuplicateMojo();
         ReflectionHelper mojoHelper = new ReflectionHelper(myMojo);
         mojoHelper.setField("baseDirectory", new File("src/test/resources/fail"));
@@ -53,7 +51,7 @@ public class CheckDuplicateMojoTest  {
     }
 
     @Test
-	public void checkGeneratedShouldOnlyReportErrorOnGenerated() throws Exception {
+    public void checkGeneratedShouldOnlyReportErrorOnGenerated() throws Exception {
         CheckDuplicateMojo myMojo = new CheckDuplicateMojo();
         ReflectionHelper mojoHelper = new ReflectionHelper(myMojo);
         mojoHelper.setField("baseDirectory", new File("src/test/resources/fail"));
@@ -78,7 +76,7 @@ public class CheckDuplicateMojoTest  {
     }
 
     @Test
-	public void okIdsShouldNotReportErrors() throws Exception {
+    public void okIdsShouldNotReportErrors() throws Exception {
         CheckDuplicateMojo myMojo = new CheckDuplicateMojo();
         ReflectionHelper mojoHelper = new ReflectionHelper(myMojo);
         mojoHelper.setField("baseDirectory", new File("src/test/resources/ok"));
