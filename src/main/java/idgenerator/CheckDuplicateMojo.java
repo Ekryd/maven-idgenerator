@@ -48,7 +48,7 @@ public class CheckDuplicateMojo extends AbstractMojo {
 	/**
 	 * If only generated ids should be checked for duplication
 	 * 
-	 * @parameter eproperty="idgen.idPrefix"default-value="false";
+	 * @parameter eproperty="idgen.idPrefix" default-value="false";
 	 */
 	private boolean checkGeneratedIds;
 
