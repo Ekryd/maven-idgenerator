@@ -1,7 +1,9 @@
 package idgenerator;
 
 import idgenerator.file.FileList;
-import idgenerator.file.XmlFileFilter;
+import idgenerator.file.FileUtil;
+import idgenerator.logger.MavenLogger;
+import idgenerator.logger.MavenLoggerImpl;
 import idgenerator.util.IdGenerator;
 import idgenerator.xml.CheckDuplicateOperation;
 import idgenerator.xml.XmlParser;
@@ -18,6 +20,7 @@ import java.io.File;
  * @goal check-duplicate
  * @phase test
  */
+@SuppressWarnings({"UnusedDeclaration", "JavaDoc"})
 public class CheckDuplicateMojo extends AbstractMojo {
 
 	/**
@@ -55,29 +58,37 @@ public class CheckDuplicateMojo extends AbstractMojo {
 	 * @parameter property="idgen.idPrefix" default-value="gen"
 	 */
 	private String idPrefix;
+	
+	private XmlParser parser;
+	private FileList xhtmlFiles;
+	private MavenLogger logger;
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		outputInfo();
-		FileList xhtmlFiles = findXHtmlFiles();
-		XmlParser parser = new XmlParser();
+		setupEnvironment();
+		runPlugin();
+	}
+
+	void setupEnvironment() {
+		logger = new MavenLoggerImpl(getLog());
+		xhtmlFiles = FileUtil.findFiles(baseDirectory, fileSuffix);
+		parser = new XmlParser();
+	}
+
+	void runPlugin() throws MojoFailureException {
+		IdGenerator idGenerator = new IdGenerator(logger, "");
 		boolean containsDuplicates = parser.parse(xhtmlFiles, new CheckDuplicateOperation(
-				new IdGenerator(getLog(), ""), elements, checkGeneratedIds, idPrefix));
+				idGenerator, elements, checkGeneratedIds, idPrefix));
 		if (containsDuplicates) {
 			throw new MojoFailureException("Contains duplicate ids");
 		}
 
 	}
 
-	private FileList findXHtmlFiles() {
-		FileList fileList = new FileList(baseDirectory);
-		fileList.findFiles(new XmlFileFilter(fileSuffix));
-		return fileList;
-	}
-
 	private void outputInfo() {
-		getLog().info(
-				String.format("Scanning all files ending with '%s' under the directory %s", fileSuffix, baseDirectory));
+		getLog().info(String.format("Scanning all files ending with '%s' under the directory %s", 
+				fileSuffix, baseDirectory));
 
 	}
 }

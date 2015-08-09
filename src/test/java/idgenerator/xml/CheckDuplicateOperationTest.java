@@ -2,10 +2,12 @@ package idgenerator.xml;
 
 import idgenerator.file.FileList;
 import idgenerator.file.XmlFileFilter;
+import idgenerator.logger.MavenLogger;
+import idgenerator.logger.MavenLoggerImpl;
 import idgenerator.util.IdGenerator;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugin.logging.SystemStreamLog;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -13,9 +15,16 @@ import java.io.File;
 import static org.junit.Assert.assertEquals;
 
 public class CheckDuplicateOperationTest {
+
+	private MavenLogger log;
+
+	@Before
+	public void setUp() throws Exception {
+		log = new MavenLoggerImpl(new SystemStreamLog());
+	}
+
 	@Test
 	public void testDuplicateIdFailParse() throws MojoFailureException {
-		Log log = new SystemStreamLog();
 		XmlParser xmlParser = new XmlParser();
 		FileList xhtmlFiles = new FileList(new File("src/test/resources/fail"));
 		xhtmlFiles.findFiles(new XmlFileFilter(".xhtml"));
@@ -26,7 +35,7 @@ public class CheckDuplicateOperationTest {
 
 	@Test
 	public void testDuplicateIdOkParse() throws MojoFailureException {
-		Log log = new SystemStreamLog();
+		
 		XmlParser xmlParser = new XmlParser();
 		FileList xhtmlFiles = new FileList(new File("src/test/resources/ok"));
 		xhtmlFiles.findFiles(new XmlFileFilter(".xhtml"));
@@ -37,7 +46,6 @@ public class CheckDuplicateOperationTest {
 
 	@Test
 	public void testDuplicateIdOnlyGenFailParse() throws MojoFailureException {
-		Log log = new SystemStreamLog();
 		XmlParser xmlParser = new XmlParser();
 		FileList xhtmlFiles = new FileList(new File("src/test/resources/fail"));
 		xhtmlFiles.findFiles(new XmlFileFilter(".xhtml"));

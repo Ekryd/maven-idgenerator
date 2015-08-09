@@ -2,6 +2,7 @@ package idgenerator;
 
 import idgenerator.file.FileList;
 import idgenerator.file.XmlFileFilter;
+import idgenerator.logger.MavenLoggerImpl;
 import idgenerator.util.IdGenerator;
 import idgenerator.xml.*;
 import org.apache.maven.plugin.AbstractMojo;
@@ -19,6 +20,7 @@ import java.util.List;
  * @goal generateid
  * @phase process-resources
  */
+@SuppressWarnings({"UnusedDeclaration", "JavaDoc"})
 public class GenerateIdMojo extends AbstractMojo {
 
     /**
@@ -102,7 +104,8 @@ public class GenerateIdMojo extends AbstractMojo {
         }
 
         FileList xhtmlBaseFiles = findBaseXHtmlFiles();
-        IdGenerator idGenerator = new IdGenerator(getLog(), idPrefix);
+        MavenLoggerImpl logger = new MavenLoggerImpl(getLog());
+        IdGenerator idGenerator = new IdGenerator(logger, idPrefix);
         parser.parse(xhtmlBaseFiles, new AddIdOperation(idGenerator));
 
         XmlModifier xmlModifier = new XmlModifier(idGenerator, encoding, getIndentCharacters(), lineSeparator, elements);

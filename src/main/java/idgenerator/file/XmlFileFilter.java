@@ -13,7 +13,7 @@ public class XmlFileFilter implements FileFilter {
 	private final String suffix;
 
 	public XmlFileFilter(String suffix) {
-		this.suffix = suffix;
+		this.suffix = suffix.toLowerCase(Locale.getDefault());
 	}
 
 	@Override

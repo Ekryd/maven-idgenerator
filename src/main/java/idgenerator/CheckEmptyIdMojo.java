@@ -1,7 +1,7 @@
 package idgenerator;
 
 import idgenerator.file.FileList;
-import idgenerator.file.XmlFileFilter;
+import idgenerator.file.FileUtil;
 import idgenerator.logger.MavenLogger;
 import idgenerator.logger.MavenLoggerImpl;
 import idgenerator.xml.CheckEmptyIdOperation;
@@ -19,6 +19,7 @@ import java.io.File;
  * @goal check-emptyid
  * @phase test
  */
+@SuppressWarnings({"UnusedDeclaration", "JavaDoc"})
 public class CheckEmptyIdMojo extends AbstractMojo {
 
 	/**
@@ -56,7 +57,7 @@ public class CheckEmptyIdMojo extends AbstractMojo {
 
 	void setupEnvironment() {
 		logger = new MavenLoggerImpl(getLog());
-		xhtmlFiles = findXHtmlFiles();
+		xhtmlFiles = FileUtil.findFiles(baseDirectory, fileSuffix);
 		parser = new XmlParser();
 	}
 
@@ -67,15 +68,9 @@ public class CheckEmptyIdMojo extends AbstractMojo {
 		}
 	}
 
-	private FileList findXHtmlFiles() {
-		FileList fileList = new FileList(baseDirectory);
-		fileList.findFiles(new XmlFileFilter(fileSuffix));
-		return fileList;
-	}
-
 	private void outputInfo() {
-		getLog().info(
-				String.format("Scanning all files ending with '%s' under the directory %s", fileSuffix, baseDirectory));
+		getLog().info(String.format("Scanning all files ending with '%s' under the directory %s", 
+				fileSuffix, baseDirectory));
 
 	}
 }

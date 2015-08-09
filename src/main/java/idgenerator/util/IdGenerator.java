@@ -1,10 +1,10 @@
 package idgenerator.util;
 
+import idgenerator.logger.MavenLogger;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.maven.plugin.logging.Log;
 
 /**
  * Handles generation and storage of unique ids
@@ -14,12 +14,11 @@ import org.apache.maven.plugin.logging.Log;
  */
 public class IdGenerator {
 
-	private final Map<String, File> idSet = new HashMap<String, File>();
+	private final Map<String, File> idSet = new HashMap<>();
 	private final String idPrefix;
+	private final MavenLogger log;
 
-	private final Log log;
-
-	public IdGenerator(Log log, String idPrefix) {
+	public IdGenerator(MavenLogger log, String idPrefix) {
 		this.log = log;
 		this.idPrefix = idPrefix;
 	}
@@ -45,7 +44,7 @@ public class IdGenerator {
 	 * @return the idSet
 	 */
 	public Map<String, File> getIdSet() {
-		return new HashMap<String, File>(idSet);
+		return new HashMap<>(idSet);
 	}
 
 	public void outputDuplicateMessage(File file, String id) {
