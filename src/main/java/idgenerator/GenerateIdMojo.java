@@ -4,8 +4,11 @@ import idgenerator.file.FileList;
 import idgenerator.file.FileUtil;
 import idgenerator.logger.MavenLogger;
 import idgenerator.logger.MavenLoggerImpl;
+import idgenerator.parser.PluginParser;
+import idgenerator.parser.xml.XmlParser;
 import idgenerator.util.IdGenerator;
-import idgenerator.xml.*;
+import idgenerator.xml.AddEmptyIdFileOperation;
+import idgenerator.xml.AddIdOperation;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -89,7 +92,7 @@ public class GenerateIdMojo extends AbstractMojo {
     /** Indicates that a tab character should be used instead of spaces. */
     private static final int INDENT_TAB = -1;
 
-    private XmlParser parser;
+    private PluginParser parser;
     private FileList xhtmlBaseFiles;
     private MavenLogger logger;
     private FileList xhtmlGenFiles;
@@ -122,11 +125,11 @@ public class GenerateIdMojo extends AbstractMojo {
         IdGenerator idGenerator = new IdGenerator(logger, idPrefix);
         parser.parse(xhtmlBaseFiles, new AddIdOperation(idGenerator));
 
-        XmlModifier xmlModifier = new XmlModifier(idGenerator, encoding, getIndentCharacters(), lineSeparator, elements);
-        List<GeneratedFile> files = xmlModifier.parseFiles(fileToGenerate);
-        for (GeneratedFile generatedFiles : files) {
-            generatedFiles.saveFile(logger);
-        }
+//        XmlModifier xmlModifier = new XmlModifier(idGenerator, encoding, getIndentCharacters(), lineSeparator, elements);
+//        List<GeneratedFile> files = xmlModifier.parseFiles(fileToGenerate);
+//        for (GeneratedFile generatedFiles : files) {
+//            generatedFiles.saveFile(logger);
+//        }
     }
 
 

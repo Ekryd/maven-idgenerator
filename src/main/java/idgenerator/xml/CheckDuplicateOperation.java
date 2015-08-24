@@ -1,9 +1,9 @@
 package idgenerator.xml;
 
-import idgenerator.util.ElementUtil;
+import idgenerator.parser.ParserOperation;
+import idgenerator.structure.PluginElement;
 import idgenerator.util.GeneratedElementFilter;
 import idgenerator.util.IdGenerator;
-import org.jdom.Element;
 
 import java.io.File;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author bjorn
  */
-public class CheckDuplicateOperation implements XmlParserOperation<Boolean> {
+public class CheckDuplicateOperation implements ParserOperation<Boolean> {
     private final IdGenerator idGenerator;
     private final GeneratedElementFilter generatedElementFilter;
     private final boolean onlyDuplicateGeneratedIds;
@@ -33,21 +33,21 @@ public class CheckDuplicateOperation implements XmlParserOperation<Boolean> {
     }
 
     @Override
-    public Boolean perform(final File file, final List<Element> elements, final Boolean oldValue) {
-        boolean containsDuplicates = oldValue;
-        for (Element element : elements) {
-            String idValue = element.getAttributeValue("id");
-            if (idValue != null && !idValue.isEmpty()) {
-                if (idGenerator.contains(idValue) && generatedElementFilter.matches(element)) {
-                    if (!onlyDuplicateGeneratedIds || idValue.startsWith(idPrefix)) {
-                        idGenerator.outputDuplicateMessage(file, idValue);
-                        containsDuplicates = true;
-                    }
-                }
-                idGenerator.addId(file, idValue);
-            }
-            containsDuplicates = perform(file, ElementUtil.getElements(element), containsDuplicates) || containsDuplicates;
-        }
+    public Boolean perform(final File file, final List<PluginElement> elements) {
+        boolean containsDuplicates = false;
+//        for (Element element : elements) {
+//            String idValue = element.getAttributeValue("id");
+//            if (idValue != null && !idValue.isEmpty()) {
+//                if (idGenerator.contains(idValue) && generatedElementFilter.matches(element)) {
+//                    if (!onlyDuplicateGeneratedIds || idValue.startsWith(idPrefix)) {
+//                        idGenerator.outputDuplicateMessage(file, idValue);
+//                        containsDuplicates = true;
+//                    }
+//                }
+//                idGenerator.addId(file, idValue);
+//            }
+//            containsDuplicates = perform(file, ElementUtil.getElements(element), containsDuplicates) || containsDuplicates;
+//        }
         return containsDuplicates;
     }
 }

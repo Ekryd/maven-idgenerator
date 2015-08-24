@@ -4,8 +4,9 @@ import idgenerator.file.FileList;
 import idgenerator.file.FileUtil;
 import idgenerator.logger.MavenLogger;
 import idgenerator.logger.MavenLoggerImpl;
+import idgenerator.parser.PluginParser;
+import idgenerator.parser.html.HtmlParser;
 import idgenerator.xml.CheckEmptyIdOperation;
-import idgenerator.xml.XmlParser;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -44,7 +45,7 @@ public class CheckEmptyIdMojo extends AbstractMojo {
      */
     private String elements;
 
-    private XmlParser parser;
+    private PluginParser parser;
     private FileList xhtmlFiles;
     private MavenLogger logger;
 
@@ -58,7 +59,7 @@ public class CheckEmptyIdMojo extends AbstractMojo {
     void setupEnvironment() {
         logger = new MavenLoggerImpl(getLog());
         xhtmlFiles = FileUtil.findFiles(baseDirectory, fileSuffix);
-        parser = new XmlParser();
+        parser = new HtmlParser();
     }
 
     void runPlugin() throws MojoFailureException {

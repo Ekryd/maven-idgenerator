@@ -1,7 +1,6 @@
 package idgenerator.util;
 
-import org.jdom.Element;
-import org.jdom.filter.Filter;
+import idgenerator.structure.PluginElement;
 
 import java.util.regex.Pattern;
 
@@ -10,25 +9,17 @@ import java.util.regex.Pattern;
  *
  * @author bjorn
  */
-public class GeneratedElementFilter implements Filter {
-    private static final long serialVersionUID = -8605449116029716276L;
+public class GeneratedElementFilter {
     private final Pattern matchPattern;
 
     public GeneratedElementFilter(final String regExMatch) {
         super();
-        this.matchPattern = Pattern.compile(regExMatch);
+        this.matchPattern = Pattern.compile(regExMatch.toLowerCase());
     }
 
-    @Override
-    public boolean matches(final Object obj) {
-        if (obj instanceof Element) {
-            Element element = (Element) obj;
-            String qualifiedName = element.getQualifiedName();
-            if (matchPattern.matcher(qualifiedName).matches()) {
-                return true;
-            }
-        }
-        return false;
+    public boolean matches(final PluginElement element) {
+        String qualifiedName = element.getElementName();
+        return matchPattern.matcher(qualifiedName).matches();
     }
 
 }
